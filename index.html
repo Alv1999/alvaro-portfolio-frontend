@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- ========================================================= CONFIG BÁSICA DE LA PÁGINA - charset: soporta acentos/ñ - viewport: hace que el layout sea responsive en móvil - theme-color: color de la barra del navegador en Android ========================================================= -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f1115" />
+    <title>Alvaro Ruggeri — Portfolio</title>
+    <!-- ========================================================= SEO / SOCIAL Editá las URLs cuando tengas tu dominio real ========================================================= -->
+    <meta
+      name="description"
+      content="Portfolio de Alvaro Ruggeri. Desarrollo web: landing pages, sitios corporativos, React/Next.js, SEO y performance."
+    />
+    <link rel="canonical" href="https://tudominio.com/" />
+    <!-- Open Graph (Facebook, LinkedIn, etc.) -->
+    <meta property="og:title" content="Alvaro Ruggeri — Portfolio" />
+    <meta
+      property="og:description"
+      content="Desarrollador Web. Interfaces rápidas, accesibles y modernas."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tudominio.com/" />
+    <!-- Para imagen de preview OG, descomentá y usá URL absoluta 1200×630 <meta property="og:image" content="https://tudominio.com/og.jpg" /> -->
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Alvaro Ruggeri — Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Desarrollador Web. Interfaces rápidas, accesibles y modernas."
+    />
+    <!-- Favicon liviano con emoji (no necesita archivo) -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>⚡</text></svg>"
+    />
+    <!-- ========================================================= LIBRERÍAS DE UI (CDNs) - Bootstrap: grilla y componentes - Font Awesome: iconos - AOS: animaciones on-scroll - Devicon: logos de tecnologías ========================================================= -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"
+      rel="stylesheet"
+    />
+    <!-- ========================================================= TU CSS (IMPORTANTE: que la ruta coincida con tu proyecto) Si tu carpeta se llama distinto, cambiá el href. ========================================================= -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <!-- Usamos atributos de Bootstrap para que el Scrollspy marque el link activo de la navbar mientras se scrollea. -->
+  <body data-bs-spy="scroll" data-bs-target="#menu" data-bs-offset="80">
+    <!-- Barra superior que muestra progreso de scroll (se rellena con JS) -->
+    <div id="bar" class="progress-top"></div>
+    <!-- ========================================================= PRELOADER - Pantalla simple de carga que se oculta al terminar (lo maneja main.js) ========================================================= -->
+    <div id="pre" aria-hidden="true">
+      <div class="text-center">
+        <div
+          class="spinner-border text-light mb-3"
+          role="status"
+          aria-label="Cargando"
+        ></div>
+        <h2 class="mb-0">Cargando…</h2>
+        <small class="text-muted">Acomodando todo ⚡</small>
+      </div>
+    </div>
+    <!-- ========================================================= NAVBAR (FIJA ARRIBA, SEMITRANSPARENTE) - En mobile se colapsa y aparece “hamburguesa” - A la derecha: botón “Descargar CV” ========================================================= -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="nav">
+      <div class="container">
+        <!-- Marca / nombre -->
+        <a class="navbar-brand fw-bold" href="#inicio">Alvaro Ruggeri</a>
+        <!-- Botón hamburguesa (visible en móvil) -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+          aria-controls="menu"
+          aria-expanded="false"
+          aria-label="Abrir menú"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Links a secciones (Scrollspy usa este #menu) -->
+        <div class="collapse navbar-collapse" id="menu">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#sobre-mi">Sobre mí</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#habilidades">Habilidades</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#tecnologias">Tecnologías</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#servicios">Servicios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#proyectos">Proyectos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contacto">Contacto</a>
+            </li>
+          </ul>
+          <!-- Botón CV: cambiá el href a tu PDF real -->
+          <a
+            class="btn btn-outline-light ms-lg-3 btn-ripple"
+            href="assets/CV-AlvaroRuggeri.pdf"
+            download
+            aria-label="Descargar CV"
+            >Descargar CV</a
+          >
+        </div>
+      </div>
+    </nav>
+    <!-- ========================================================= HERO (PORTADA) - Fondo con degradés - Título con letras animadas y “shine” que cruza - Rotador de palabras (cambia con JS) - CTA “Ver proyectos / Hablemos” ========================================================= -->
+    <header id="inicio" class="hero">
+      <div class="container hero-inner" data-aos="fade-up">
+        <!-- Partículas decorativas (solo visual) -->
+        <div class="sparks" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <!-- Título con animación letra por letra -->
+        <h1 class="hero-title">
+          <span class="name-bling" aria-label="Alvaro Ruggeri">
+            <span>A</span><span>l</span><span>v</span><span>a</span
+            ><span>r</span><span>o</span>&nbsp; <span>R</span><span>u</span
+            ><span>g</span><span>g</span><span>e</span><span>r</span
+            ><span>i</span> <i class="shine" aria-hidden="true"></i>
+          </span>
+        </h1>
+        <!-- Pastilla con “rotador” (contenido cambia en JS) -->
+        <div class="typing-pill" id="rotator" aria-live="polite">
+          <i class="fa-solid fa-bolt"></i> <span class="word">Developer</span>
+        </div>
+        <!-- Llamadas a la acción -->
+        <div class="hero-cta">
+          <a href="#proyectos" class="btn btn-brand btn-lg btn-ripple"
+            >Ver proyectos</a
+          >
+          <a href="#contacto" class="btn btn-outline-light btn-lg btn-ripple"
+            >Hablemos</a
+          >
+        </div>
+      </div>
+    </header>
+    <main id="main-content">
+      <!-- ======================================================= SOBRE MÍ - Presentación + “mini panel” con stack favorito ======================================================= -->
+      <section id="sobre-mi" class="py-5" aria-labelledby="sobre-mi-title">
+        <div class="container" data-aos="fade-right">
+          <h2 class="fw-bold mb-3" id="sobre-mi-title">Sobre mí</h2>
+          <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+              <p class="text-muted">
+                Desarrollador web de Córdoba. Me enfoco en interfaces rápidas,
+                accesibles y con estética moderna. Trabajo con
+                <strong>HTML/CSS/JS, Bootstrap y React/Next.js</strong>,
+                cuidando SEO y performance.
+              </p>
+              <ul class="text-muted">
+                <li>Landing pages de conversión y sitios corporativos.</li>
+                <li>
+                  Integraciones: WhatsApp, Maps, Analytics, formularios y email.
+                </li>
+                <li>
+                  Deploy ágil (Vercel/Netlify) y control de versiones con Git.
+                </li>
+              </ul>
+            </div>
+            <!-- Panel decorativo con chips del stack -->
+            <div class="col-lg-5">
+              <div
+                class="p-4 rounded-4"
+                style="
+                  background: linear-gradient(135deg, #1a1f2b 0%, #0e1118 100%);
+                  border: 1px solid #ffffff14;
+                "
+              >
+                <p class="mb-2 text-muted">Stack favorito</p>
+                <div class="d-flex flex-wrap gap-2">
+                  <span class="badge text-bg-dark border">HTML</span>
+                  <span class="badge text-bg-dark border">CSS</span>
+                  <span class="badge text-bg-dark border">Bootstrap</span>
+                  <span class="badge text-bg-dark border">JavaScript</span>
+                  <span class="badge text-bg-dark border">React</span>
+                  <span class="badge text-bg-dark border">Next.js</span>
+                </div>
+                <p class="mt-3 mb-0 text-muted">
+                  Código claro, micro-interacciones y foco en resultados.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======================================================= HABILIDADES - Barras con porcentaje (se animan al entrar en pantalla) ======================================================= -->
+      <section
+        id="habilidades"
+        class="py-5 bg-light"
+        aria-labelledby="habilidades-title"
+      >
+        <div class="container">
+          <h2 class="fw-bold text-center mb-5" id="habilidades-title">
+            Habilidades
+          </h2>
+          <div class="row">
+            <!-- data-target indica el % final de cada barra (animado con JS) -->
+            <div class="col-md-6 mb-4">
+              <div class="skill-card tilt" data-aos="fade-up">
+                <p class="mb-1">HTML / CSS</p>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-primary"
+                    style="width: 0%"
+                    data-target="90"
+                  >
+                    0%
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div
+                class="skill-card tilt"
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
+                <p class="mb-1">JavaScript</p>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-success"
+                    style="width: 0%"
+                    data-target="80"
+                  >
+                    0%
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div
+                class="skill-card tilt"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <p class="mb-1">Bootstrap</p>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-info"
+                    style="width: 0%"
+                    data-target="85"
+                  >
+                    0%
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div
+                class="skill-card tilt"
+                data-aos="fade-up"
+                data-aos-delay="300"
+              >
+                <p class="mb-1">React / Next.js</p>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-warning"
+                    style="width: 0%"
+                    data-target="70"
+                  >
+                    0%
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======================================================= TECNOLOGÍAS (grilla con Devicon) ======================================================= -->
+      <section id="tecnologias" class="py-5" aria-labelledby="tec-title">
+        <div class="container">
+          <h2 class="fw-bold text-center mb-4" id="tec-title">Tecnologías</h2>
+          <p class="text-center text-muted mb-4">
+            Algunas herramientas con las que trabajo en el día a día.
+          </p>
+          <div class="tech-grid">
+            <div class="tech-item" data-aos="zoom-in">
+              <i class="devicon-html5-plain colored"></i><span>HTML5</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="60">
+              <i class="devicon-css3-plain colored"></i><span>CSS3</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="120">
+              <i class="devicon-javascript-plain colored"></i
+              ><span>JavaScript</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="180">
+              <i class="devicon-react-original colored"></i><span>React</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="240">
+              <i class="devicon-nextjs-plain"></i><span>Next.js</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="300">
+              <i class="devicon-bootstrap-plain colored"></i
+              ><span>Bootstrap</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="360">
+              <i class="devicon-nodejs-plain colored"></i><span>Node.js</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="420">
+              <i class="devicon-git-plain colored"></i><span>Git</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="480">
+              <i class="devicon-figma-plain colored"></i><span>Figma</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="540">
+              <i class="devicon-mysql-plain colored"></i><span>SQL</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="600">
+              <i class="devicon-vuejs-plain colored"></i
+              ><span>Vue (bases)</span>
+            </div>
+            <div class="tech-item" data-aos="zoom-in" data-aos-delay="660">
+              <i class="devicon-laravel-plain colored"></i
+              ><span>Laravel (bases)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======================================================= SERVICIOS ======================================================= -->
+      <section id="servicios" class="py-5" aria-labelledby="servicios-title">
+        <div class="container text-center">
+          <h2 class="fw-bold mb-5" id="servicios-title">Servicios</h2>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="service-card tilt" data-aos="zoom-in">
+                <i class="fas fa-code svc-icon svc-blue" aria-hidden="true"></i>
+                <h5>Desarrollo Web</h5>
+                <p class="text-muted mb-0">UI limpia, accesible y rápida.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div
+                class="service-card tilt"
+                data-aos="zoom-in"
+                data-aos-delay="120"
+              >
+                <i
+                  class="fas fa-mobile-alt svc-icon svc-green"
+                  aria-hidden="true"
+                ></i>
+                <h5>Responsive</h5>
+                <p class="text-muted mb-0">
+                  Se adapta perfecto a cada pantalla.
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div
+                class="service-card tilt"
+                data-aos="zoom-in"
+                data-aos-delay="220"
+              >
+                <i
+                  class="fas fa-rocket svc-icon svc-red"
+                  aria-hidden="true"
+                ></i>
+                <h5>SEO & Performance</h5>
+                <p class="text-muted mb-0">
+                  Buenas prácticas y Core Web Vitals.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======================================================= PROYECTOS ======================================================= -->
+      <section
+        id="proyectos"
+        class="py-5 bg-light"
+        aria-labelledby="proyectos-title"
+      >
+        <div class="container">
+          <h2 class="fw-bold text-center mb-4" id="proyectos-title">
+            Proyectos
+          </h2>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card h-100 p-2 tilt">
+                <div class="card-body">
+                  <h5 class="card-title">Lavadero Premium</h5>
+                  <p class="card-text">
+                    Landing con agenda y WhatsApp directo.
+                  </p>
+                  <a href="#" class="btn btn-sm btn-brand btn-ripple"
+                    >Ver online</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100 p-2 tilt">
+                <div class="card-body">
+                  <h5 class="card-title">Portfolio Locutora</h5>
+                  <p class="card-text">Audio player, galería y prensa.</p>
+                  <a href="#" class="btn btn-sm btn-brand btn-ripple"
+                    >Ver online</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100 p-2 tilt">
+                <div class="card-body">
+                  <h5 class="card-title">Reservas Barbería</h5>
+                  <p class="card-text">Turnos y recordatorios por mail.</p>
+                  <a href="#" class="btn btn-sm btn-brand btn-ripple"
+                    >Ver online</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======================================================= CONTACTO ⚠️ Clave para el JS: - id del form = "contact-form" - ids de campos = #nombre, #telefono, #email, #mensaje Nota: NO poner comentarios dentro de <form> o <input>. ======================================================= -->
+      <section
+        id="contacto"
+        class="py-5 text-center"
+        aria-labelledby="contacto-title"
+      >
+        <div class="container">
+          <h2 class="fw-bold mb-4" id="contacto-title">Contacto</h2>
+          <div class="contact-wrap">
+            <!-- Lado izquierdo: mensaje y datos -->
+            <div class="contact-left" data-aos="fade-right">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div
+                  style="
+                    width: 48px;
+                    height: 48px;
+                    display: grid;
+                    place-items: center;
+                    background: #0b121d;
+                    border: 1px solid #1a2230;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 28px #27ef9f22;
+                  "
+                >
+                  <i
+                    class="fa-regular fa-comments"
+                    style="color: var(--neon); font-size: 20px"
+                  ></i>
+                </div>
+                <div>
+                  <div class="contact-title">¿Tenés un proyecto en mente?</div>
+                  <div class="contact-sub">¡Hablemos!</div>
+                </div>
+              </div>
+              <div class="contact-bullets text-start">
+                <div class="mb-2">
+                  <i class="fa-solid fa-envelope me-2"></i>
+                  <a href="mailto:alvaroruggeri2@gmail.com"
+                    >alvaroruggeri2@gmail.com</a
+                  >
+                </div>
+                <div class="mb-2">
+                  <i class="fa-brands fa-whatsapp me-2"></i>
+                  <a
+                    href="https://wa.me/5493884883844"
+                    target="_blank"
+                    rel="noopener"
+                    >+54 9 3884 883844</a
+                  >
+                </div>
+                <small class="d-block text-muted mt-3"
+                  >Tiempo de respuesta: dentro del día ✨</small
+                >
+              </div>
+            </div>
+            <!-- Lado derecho: formulario “glass” (validación en JS) -->
+            <form
+              id="contact-form"
+              class="text-start"
+              novalidate
+              data-aos="fade-left"
+            >
+              <!-- 🛡️ Honeypot anti-spam -->
+              <input
+                type="text"
+                id="website"
+                name="website"
+                style="display: none"
+                tabindex="-1"
+                autocomplete="off"
+              />
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <input
+                    type="text"
+                    class="form-control glass"
+                    id="nombre"
+                    name="nombre"
+                    placeholder="Nombre completo"
+                    autocomplete="name"
+                    required
+                  />
+                  <div class="invalid-feedback">Decime tu nombre 😉</div>
+                </div>
+                <div class="col-md-6">
+                  <input
+                    type="tel"
+                    class="form-control glass"
+                    id="telefono"
+                    name="telefono"
+                    placeholder="Teléfono (opcional)"
+                    autocomplete="tel"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <input
+                    type="email"
+                    class="form-control glass"
+                    id="email"
+                    name="email"
+                    placeholder="E-mail"
+                    autocomplete="email"
+                    required
+                  />
+                  <div class="invalid-feedback">Poné un email válido 🙏</div>
+                </div>
+                <div class="col-md-6">
+                  <input
+                    type="text"
+                    class="form-control glass"
+                    id="asunto"
+                    name="asunto"
+                    placeholder="Asunto (opcional)"
+                  />
+                </div>
+                <div class="col-12">
+                  <textarea
+                    class="form-control glass"
+                    id="mensaje"
+                    name="mensaje"
+                    rows="5"
+                    placeholder="Contame tu idea…"
+                    autocomplete="off"
+                    required
+                  ></textarea>
+                  <div class="invalid-feedback">
+                    Escribime un poquito más 😅
+                  </div>
+                </div>
+                <div class="col-12 d-grid d-sm-block">
+                  <button class="btn btn-neon btn-lg btn-ripple" type="submit">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Enviar mensaje
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- ========================================================= FOOTER ========================================================= -->
+    <footer class="py-4 text-center" role="contentinfo">
+      <p class="mb-0">Hecho con ❤️</p>
+    </footer>
+    <!-- ========================================================= BOTÓN FLOTANTE DE WHATSAPP ========================================================= -->
+    <a
+      class="wsp-fab"
+      href="https://wa.me/5493884883844"
+      target="_blank"
+      rel="noopener"
+      aria-label="Abrir WhatsApp"
+    >
+      <i class="fa-brands fa-whatsapp"></i>
+      <span class="tip">Escribime por WhatsApp</span>
+    </a>
+    <!-- ========================================================= SCRIPTS (al final para que cargue más rápido) - Primero librerías - Después tu main.js (inicializa AOS, preloader, barras, tilt, etc.) ⚠️ Ruta actual: js/main.js (si tu archivo está en assets/js, cambiá a assets/js/main.js) ========================================================= -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,743 @@
+/* =========================================================
+   VARIABLES DE COLOR Y AJUSTES GENERALES
+   - Usamos "variables CSS" para definir colores y reutilizarlos.
+   - Si cambiás un color acá, se actualiza en todo el sitio.
+========================================================= */
+:root {
+  --bg: #0f1115; /* color de fondo principal (oscuro) */
+  --bg2: #0b0d11; /* fondo secundario, un poco más oscuro */
+  --text: #e9e9e9; /* color del texto (blanco/gris claro) */
+  --muted: #b9b9b9; /* color de texto secundario/menos importante */
+  --brand: #6c5ce7; /* violeta: color de marca / botones principales */
+  --brand2: #00d4ff; /* cian: segundo color de marca / acentos */
+  --neon: #27ef9f; /* verde neón: se usa en contacto/whatsapp */
+}
+
+html {
+  /* Efecto de scroll suave cuando hacés clic en enlaces de ancla (#seccion) */
+  scroll-behavior: smooth;
+
+  /* Deja un margen arriba cuando se hace scroll a una sección,
+     para que la navbar fija no tape el título de esa sección */
+  scroll-padding-top: 84px;
+}
+
+body {
+  background: var(--bg); /* aplica fondo oscuro general */
+  color: var(--text); /* texto claro */
+  -webkit-font-smoothing: antialiased; /* mejora la nitidez de tipografías en WebKit */
+}
+
+/* =========================================================
+   NAVBAR (barra superior)
+========================================================= */
+.navbar {
+  /* Fondo oscuro semi-transparente (para ver un poquito el fondo al hacer scroll) */
+  background: rgba(11, 13, 17, 0.85) !important;
+
+  /* Efecto “vidrio esmerilado” sobre lo que hay detrás */
+  backdrop-filter: blur(8px);
+}
+
+.navbar.scrolled {
+  /* Cuando bajás, le ponemos sombra para separar visualmente del contenido */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.nav-link.active {
+  /* Resalta el enlace del menú que está activo (sección visible) en cian */
+  color: var(--brand2) !important;
+}
+
+/* =========================================================
+   BARRA DE PROGRESO DE SCROLL (arriba de todo)
+   - Es una línea finita que se llena según cuánto scrolleaste.
+   - El JS cambia su width del 0% al 100%.
+========================================================= */
+.progress-top {
+  position: fixed; /* fija arriba de todo aunque hagas scroll */
+  top: 0;
+  left: 0;
+  height: 4px; /* grosor de la línea */
+  width: 0; /* arranca vacía */
+  background: linear-gradient(
+    90deg,
+    var(--brand),
+    var(--brand2)
+  ); /* violeta → cian */
+  z-index: 1500; /* bien por encima del contenido */
+}
+
+/* =========================================================
+   PRELOADER (pantalla de “Cargando…” breve)
+   - Cubre la pantalla al principio y luego desaparece con un fade.
+========================================================= */
+#pre {
+  position: fixed; /* ocupa toda la pantalla */
+  inset: 0; /* top/right/bottom/left: 0 (simplificado) */
+  display: grid; /* grid para centrar fácil */
+  place-items: center; /* centra el contenido tanto vertical como horizontal */
+  background: var(--bg2); /* fondo oscuro */
+  z-index: 2000; /* por encima de todo lo demás */
+  transition: opacity 0.5s; /* transición para desvanecer */
+}
+
+#pre.fade-out {
+  opacity: 0; /* se desvanece */
+  pointer-events: none; /* deja de bloquear clics */
+}
+
+/* =========================================================
+   HERO (portada principal)
+   - Pantalla completa con tu nombre grande y efectos de fondo.
+========================================================= */
+header.hero {
+  min-height: 100vh; /* ocupa el alto de la pantalla */
+  display: flex;
+  align-items: center; /* centra el contenido verticalmente */
+  justify-content: center; /* centra horizontalmente */
+  text-align: center;
+  position: relative; /* para posicionar cosas dentro (partículas, brillos) */
+  overflow: hidden; /* oculta desbordes de efectos */
+
+  /* Fondos radiales suaves (manchas de color) + color base */
+  background: radial-gradient(
+      1200px 700px at 20% 10%,
+      #6c5ce725 0%,
+      transparent 60%
+    ),
+    radial-gradient(900px 600px at 80% 90%, #00d4ff22 0%, transparent 60%),
+    var(--bg2);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1; /* encima de los fondos/partículas */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px; /* espacio entre elementos (título, pastilla, botones) */
+}
+
+/* ---------- Título con letras animadas y degradado ---------- */
+.hero-title {
+  margin-bottom: 0.25rem;
+}
+
+.name-bling {
+  display: inline-flex; /* para separar letra por letra */
+  gap: 0.03em; /* pequeño espacio entre letras */
+  position: relative;
+  font-weight: 800; /* bien grueso */
+  font-size: clamp(2.6rem, 6vw, 4.2rem); /* tamaño responsivo */
+  letter-spacing: 0.5px; /* leve separación de caracteres */
+}
+
+.name-bling > span {
+  /* Cada letra es un span animado con degradado en movimiento */
+  display: inline-block;
+  transform-origin: bottom; /* pivot de la animación */
+  opacity: 0; /* las letras aparecen con la animación */
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.25));
+  background: linear-gradient(90deg, #8b7cfb, #00d4ff, #8b7cfb);
+  background-size: 200% 100%; /* el degradado “viaja” */
+  -webkit-background-clip: text; /* aplica el degradado solo al texto */
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* 1) heroGradient mueve el degradado
+     2) letterIn hace entrar cada letra (y cambia la opacidad a 1) */
+  animation: heroGradient 7s linear infinite, letterIn 0.7s ease forwards;
+}
+
+/* Brillo que cruza el nombre (una banda clara que pasa de izq. a der.) */
+.name-bling .shine {
+  position: absolute;
+  inset: 0 auto 0 -20%; /* empieza fuera a la izquierda */
+  width: 30%;
+  transform: skewX(-20deg); /* diagonal leve */
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  filter: blur(4px); /* lo suaviza para que parezca brillo */
+  pointer-events: none; /* no tapa clics */
+  animation: shineSweep 3.8s ease-in-out 1.2s infinite; /* pase continuo */
+}
+
+/* Stagger: cada letra arranca un poquito después para efecto “ola” */
+.name-bling > span:nth-child(1) {
+  animation-delay: 0.04s;
+}
+.name-bling > span:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.name-bling > span:nth-child(3) {
+  animation-delay: 0.12s;
+}
+.name-bling > span:nth-child(4) {
+  animation-delay: 0.16s;
+}
+.name-bling > span:nth-child(5) {
+  animation-delay: 0.2s;
+}
+.name-bling > span:nth-child(6) {
+  animation-delay: 0.24s;
+}
+.name-bling > span:nth-child(7) {
+  animation-delay: 0.28s;
+}
+.name-bling > span:nth-child(8) {
+  animation-delay: 0.32s;
+}
+.name-bling > span:nth-child(9) {
+  animation-delay: 0.36s;
+}
+.name-bling > span:nth-child(10) {
+  animation-delay: 0.4s;
+}
+.name-bling > span:nth-child(11) {
+  animation-delay: 0.44s;
+}
+.name-bling > span:nth-child(12) {
+  animation-delay: 0.48s;
+}
+.name-bling > span:nth-child(13) {
+  animation-delay: 0.52s;
+}
+
+/* Animaciones del degradado, entrada de letras y barrido del brillo */
+@keyframes heroGradient {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+@keyframes letterIn {
+  0% {
+    transform: translateY(16px) rotate(-2deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+    opacity: 1;
+  }
+}
+@keyframes shineSweep {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 110%;
+  }
+}
+
+/* ---------- Pastilla con rotador de palabras (Developer/Frontend/etc.) ---------- */
+.typing-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px; /* forma de píldora */
+  background: #101522; /* fondo oscuro azulado */
+  border: 1px solid #ffffff22; /* borde suave */
+  color: #cfd7ff; /* texto celeste grisáceo */
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28); /* sombrita linda */
+}
+.typing-pill .word {
+  display: inline-block;
+  width: 12ch; /* ancho fijo para evitar “saltitos” cuando cambia la palabra */
+  text-align: left;
+}
+.typing-pill i {
+  color: #7b88ff; /* icono rayito en violeta */
+}
+
+/* ---------- Botones del hero ---------- */
+.hero-cta {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.btn-brand {
+  background: var(--brand); /* violeta */
+  color: #fff;
+  border: 0;
+}
+.btn-brand:hover {
+  filter: brightness(1.08); /* se ilumina un toque al pasar el mouse */
+}
+
+/* Efecto ripple (onda) al presionar botones con .btn-ripple */
+.btn-ripple {
+  position: relative;
+  overflow: hidden; /* oculta la onda fuera del botón */
+}
+.btn-ripple::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #fff3; /* blanco muy transparente */
+  border-radius: 50%;
+  transform: scale(0); /* arranca chiquita */
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.6s, opacity 0.8s;
+  left: var(--x, 50%); /* el JS pone el punto de inicio del ripple */
+  top: var(--y, 50%);
+}
+.btn-ripple:active::after {
+  transform: scale(18); /* se agranda rápido */
+  opacity: 1;
+}
+
+/* ---------- Partículas (puntitos) que flotan en el fondo del hero ---------- */
+.sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* no tapa clics */
+  z-index: 0; /* por detrás del contenido */
+}
+.sparks span {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%; /* circulito */
+  background: radial-gradient(
+    circle,
+    #8b7cfb,
+    transparent 60%
+  ); /* violeta difuso */
+  opacity: 0.35;
+  animation: floatUp 8s linear infinite; /* sube y se desvanece en loop */
+}
+/* Posiciones y delays distintos para que no se muevan todas igual */
+.sparks span:nth-child(1) {
+  left: 10%;
+  bottom: 15%;
+  animation-delay: 0s;
+}
+.sparks span:nth-child(2) {
+  left: 25%;
+  bottom: 10%;
+  animation-delay: 1s;
+}
+.sparks span:nth-child(3) {
+  left: 55%;
+  bottom: 12%;
+  animation-delay: 2s;
+}
+.sparks span:nth-child(4) {
+  left: 75%;
+  bottom: 18%;
+  animation-delay: 3s;
+}
+.sparks span:nth-child(5) {
+  left: 88%;
+  bottom: 9%;
+  animation-delay: 4s;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(-120px) scale(1);
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   SECCIONES / TIPOGRAFÍAS GENERALES
+========================================================= */
+section {
+  scroll-margin-top: 84px; /* cuando saltás a #seccion, deja 84px libres arriba */
+}
+
+.text-muted {
+  color: var(--muted) !important; /* gris suave para textos secundarios */
+}
+
+.bg-light {
+  /* Cuando una sección usa fondo claro (Bootstrap),
+     ponemos el texto oscuro para mejor contraste */
+  color: #0f1115 !important;
+}
+.bg-light .text-muted {
+  color: #5f6470 !important; /* gris más oscuro sobre fondo claro */
+}
+
+/* =========================================================
+   HABILIDADES (tarjetas y barras de progreso)
+========================================================= */
+.skill-card {
+  background: #fff; /* tarjetas claras */
+  color: #0f1115; /* texto oscuro */
+  border: 1px solid #e8eaf1; /* borde suave */
+  border-radius: 16px; /* esquinas redondeadas */
+  padding: 16px 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08); /* sombra leve */
+}
+.skill-card:hover {
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12); /* sombra un poco más fuerte al pasar el mouse */
+}
+.skill-card p {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Barra “vacía” */
+.progress {
+  background: #eaecef;
+  height: 12px;
+  border-radius: 999px; /* pastilla */
+  overflow: hidden;
+}
+
+/* Barra “llena” (el JS la va aumentando del 0% al target%) */
+.progress-bar {
+  transition: width 0.25s ease; /* animación suave al crecer */
+}
+
+/* Efecto de rayitas cuando se está llenando (clase se agrega por JS) */
+.progress-bar.is-animating {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.25) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.25) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: moveStripes 0.7s linear infinite;
+}
+
+@keyframes moveStripes {
+  to {
+    background-position: 1rem 0;
+  } /* corre las rayas hacia la derecha */
+}
+
+/* =========================================================
+   SERVICIOS (tarjetas con glow suave)
+========================================================= */
+#servicios {
+  background: #0d1118; /* fondo un poco más azulado */
+}
+
+.service-card {
+  position: relative;
+  border: 1px solid #1a2230;
+  border-radius: 18px;
+  padding: 26px 20px;
+  background: linear-gradient(
+    180deg,
+    #101525 0%,
+    #0c111a 100%
+  ); /* degrade oscuro */
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.25s ease, transform 0.08s linear, border-color 0.25s;
+  overflow: hidden;
+}
+
+/* Halo de luz que aparece desde abajo al hacer hover */
+.service-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -30% -60% -30%; /* centrado, sobresale a los costados */
+  height: 120px;
+  background: radial-gradient(
+    120px 60px at 50% 50%,
+    #7b88ff33,
+    transparent 60%
+  );
+  transform: translateY(40px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.service-card:hover {
+  border-color: #2a3750;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.35);
+}
+.service-card:hover::after {
+  opacity: 1;
+  transform: translateY(0); /* sube el glow */
+}
+
+/* Iconos grandes en cada tarjeta */
+.svc-icon {
+  font-size: 2.6rem;
+  margin-bottom: 0.6rem;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
+  transition: transform 0.25s ease, text-shadow 0.25s;
+}
+.service-card:hover .svc-icon {
+  transform: translateY(-2px) scale(1.05);
+  text-shadow: 0 0 18px #7b88ff33; /* leve resplandor */
+}
+
+/* Colores de íconos (simplemente decorativo) */
+.svc-blue {
+  color: #3c7bff;
+}
+.svc-green {
+  color: #1fb57a;
+}
+.svc-red {
+  color: #e24b5a;
+}
+
+/* =========================================================
+   PROYECTOS (tarjetas con efecto 3D “tilt”)
+========================================================= */
+.card {
+  background: #131722; /* tarjetas oscuras */
+  color: var(--text);
+  border: 1px solid #ffffff12; /* borde muy sutil */
+}
+.bg-light .card {
+  /* Si la sección tiene fondo claro, adaptamos la tarjeta a claro */
+  background: #fff;
+  color: #0f1115;
+  border-color: #e5e7eb;
+}
+
+.tilt {
+  transform-style: preserve-3d; /* prepara para el efecto 3D */
+  transition: transform 0.08s linear;
+}
+.tilt .card-title {
+  transform: translateZ(16px); /* el título se “eleva” un poco en 3D */
+}
+.tilt:hover {
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35); /* sombra más marcada en hover */
+}
+
+/* =========================================================
+   TECNOLOGÍAS (grilla de logos)
+========================================================= */
+#tecnologias {
+  background: #11141a; /* diferenciado del resto */
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
+  gap: 28px;
+}
+
+/* Aumentamos columnas según tamaño de pantalla */
+@media (min-width: 576px) {
+  .tech-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 992px) {
+  .tech-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.tech-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 14px;
+  border: 1px solid #1f2633;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #0e1320 0%, #0a0f18 100%);
+  transition: transform 0.15s ease, box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.tech-item i {
+  font-size: 42px; /* tamaño del logo */
+  opacity: 0.9;
+}
+.tech-item span {
+  color: #bfc7dc;
+  font-weight: 600;
+}
+
+.tech-item:hover {
+  transform: translateY(-3px); /* sube un poquito */
+  border-color: #2a3750;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px #2a375044 inset; /* brillo leve interior */
+}
+
+/* =========================================================
+   CONTACTO (sección con glass + botón neón)
+========================================================= */
+#contacto {
+  background: #0c1016;
+  position: relative;
+  overflow: hidden; /* oculta el glow de fondo que se salga */
+}
+
+/* Glow suave de fondo (gran mancha verde difusa) */
+#contacto::before {
+  content: "";
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  right: -200px;
+  top: -200px;
+  background: radial-gradient(closest-side, #27ef9f22, transparent 70%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* Layout de dos columnas en escritorio (arriba una sola en mobile) */
+.contact-wrap {
+  display: grid;
+  gap: 24px;
+}
+@media (min-width: 992px) {
+  .contact-wrap {
+    grid-template-columns: 1.1fr 1.3fr; /* izquierda un poco más angosta */
+  }
+}
+
+/* Tarjeta de la izquierda con info de contacto */
+.contact-left {
+  border: 1px solid #1a2230;
+  border-radius: 18px;
+  padding: 28px;
+  background: linear-gradient(180deg, #0f1724 0%, #0a1018 100%);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* Títulos y subtítulos dentro de contacto */
+.contact-title {
+  font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.18;
+  color: #93ffd9; /* verde agua */
+}
+.contact-sub {
+  color: #7ef0c3;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+/* Listita de formas de contactarte */
+.contact-bullets {
+  margin-top: 18px;
+  color: #cfeee4;
+}
+.contact-bullets a {
+  color: #93ffd9; /* links en verde agua */
+  text-decoration: none;
+}
+.contact-bullets a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Inputs “glass” (transparentosos) ---------- */
+.glass {
+  background: rgba(255, 255, 255, 0.02); /* casi transparente */
+  border: 1px solid #1a2230;
+  color: #e9f3ff; /* texto claro */
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.glass::placeholder {
+  color: #8da0b5; /* placeholder más apagado */
+}
+.glass:focus {
+  outline: none;
+  border-color: #2a3750; /* cambia borde al enfocar */
+  box-shadow: 0 0 0 2px #2a375022; /* “aura” leve */
+}
+
+/* Botón verde neón para enviar el formulario */
+.btn-neon {
+  background: var(--neon);
+  color: #0b0f14; /* texto oscuro para contrastar con verde brillante */
+  border: none;
+  font-weight: 800;
+  border-radius: 14px;
+  padding: 12px 18px;
+  box-shadow: 0 10px 30px #27ef9f44; /* glow verde */
+}
+.btn-neon:hover {
+  filter: brightness(1.05);
+} /* un toque más brillante */
+.btn-neon:active {
+  transform: translateY(1px);
+} /* feedback al hacer click */
+
+/* =========================================================
+   BOTÓN FLOTANTE DE WHATSAPP (abajo a la derecha)
+========================================================= */
+.wsp-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1200; /* por encima del contenido */
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center; /* centra el icono */
+  background: #25d366; /* verde WhatsApp */
+  color: #0b0f14;
+  border-radius: 999px; /* círculo */
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.35),
+    /* sombra verde hacia abajo */ 0 0 0 2px #0b0f14 inset; /* aro oscuro interno */
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.wsp-fab:hover {
+  transform: translateY(-2px); /* sube un pelín */
+  box-shadow: 0 16px 38px rgba(37, 211, 102, 0.45); /* sombra más marcada */
+}
+
+.wsp-fab i {
+  font-size: 24px; /* tamaño del ícono */
+}
+
+/* Globito con texto que aparece al pasar el mouse */
+.wsp-fab .tip {
+  position: absolute;
+  right: 64px; /* sale hacia la izquierda del botón */
+  bottom: 50%;
+  transform: translateY(50%); /* centro verticalmente respecto del botón */
+  background: #101522;
+  color: #cfe7ff;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border: 1px solid #2a3750;
+  border-radius: 8px;
+  white-space: nowrap; /* que no se corte en varias líneas */
+  opacity: 0; /* oculto por defecto */
+  pointer-events: none; /* no interfiere con el mouse */
+  transition: opacity 0.2s ease;
+}
+.wsp-fab:hover .tip {
+  opacity: 1; /* aparece el cartelito */
+}
+
+/* =========================================================
+   FOOTER (pie de página)
+========================================================= */
+footer {
+  background: #0a0c10; /* más oscuro que el body para diferenciar */
+}
