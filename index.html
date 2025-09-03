@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <!-- ========================================================= CONFIG BÁSICA DE LA PÁGINA - charset: soporta acentos/ñ - viewport: hace que el layout sea responsive en móvil - theme-color: color de la barra del navegador en Android ========================================================= -->
+    <!--
+    ╔══════════════════════════════════════════════════════════════════════╗
+    ║  PORTFOLIO — HTML actualizado (solo HTML + Bootstrap/FA desde CDN)   ║
+    ║  PEDIDOS APLICADOS:                                                  ║
+    ║   • Hero SIN rotador “Developer/Freelancer”.                         ║
+    ║     → 3 “píldoras” separadas: SISTEMAS / INTEGRACIONES / DATOS.      ║
+    ║   • Microcopys del hero más claros (sin “contrato”).                 ║
+    ║   • Sección ¿Cómo trabajo? en lenguaje simple (3 bloques grandes).   ║
+    ║   • FAQs en “tarjetas” con más estructura visual (HTML puro).        ║
+    ║   • Mantengo IDs/names del formulario y tus librerías.               ║
+    ║   • Splash 2s (💻 A.R.DEV + subtítulo) igual que antes.               ║
+    ╚══════════════════════════════════════════════════════════════════════╝
+    -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0f1115" />
     <title>Alvaro Ruggeri — Portfolio</title>
-    <!-- ========================================================= SEO / SOCIAL Editá las URLs cuando tengas tu dominio real ========================================================= -->
+
+    <!-- SEO básico (actualizá al tener tu dominio real) -->
     <meta
       name="description"
-      content="Portfolio de Alvaro Ruggeri. Desarrollo web: landing pages, sitios corporativos, React/Next.js, SEO y performance."
+      content="Sistemas a medida, integraciones entre herramientas y tableros de datos. Desarrollo claro y medible."
     />
     <link rel="canonical" href="https://tudominio.com/" />
-    <!-- Open Graph (Facebook, LinkedIn, etc.) -->
     <meta property="og:title" content="Alvaro Ruggeri — Portfolio" />
     <meta
       property="og:description"
-      content="Desarrollador Web. Interfaces rápidas, accesibles y modernas."
+      content="Software a medida, integraciones y análisis de datos."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tudominio.com/" />
-    <!-- Para imagen de preview OG, descomentá y usá URL absoluta 1200×630 <meta property="og:image" content="https://tudominio.com/og.jpg" /> -->
-    <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Alvaro Ruggeri — Portfolio" />
-    <meta
-      name="twitter:description"
-      content="Desarrollador Web. Interfaces rápidas, accesibles y modernas."
-    />
-    <!-- Favicon liviano con emoji (no necesita archivo) -->
+
+    <!-- Favicon emoji liviano -->
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>⚡</text></svg>"
     />
-    <!-- ========================================================= LIBRERÍAS DE UI (CDNs) - Bootstrap: grilla y componentes - Font Awesome: iconos - AOS: animaciones on-scroll - Devicon: logos de tecnologías ========================================================= -->
+
+    <!-- CSS de terceros (los mismos que ya usás) -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -50,31 +57,119 @@
       href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"
       rel="stylesheet"
     />
-    <!-- ========================================================= TU CSS (IMPORTANTE: que la ruta coincida con tu proyecto) Si tu carpeta se llama distinto, cambiá el href. ========================================================= -->
+
+    <!-- Tu CSS -->
     <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Mini CSS inline solo para SPLASH / skip-link (no pisa tu estilo) -->
+    <style>
+      html.splash-lock,
+      body.splash-lock {
+        overflow: hidden;
+      }
+      #pre {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: #0b0f16;
+        color: #e6e9ef;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+      }
+      #pre.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .splash-logo-emoji {
+        font-size: 48px;
+        line-height: 1;
+      }
+      .splash-title {
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        margin-top: 8px;
+        font-size: 36px;
+        animation: splashPulse 1.2s ease-in-out infinite;
+      }
+      .splash-sub {
+        margin-top: 6px;
+        opacity: 0.85;
+        font-size: 16px;
+      }
+      @keyframes splashPulse {
+        0% {
+          transform: scale(0.985);
+        }
+        50% {
+          transform: scale(1.015);
+        }
+        100% {
+          transform: scale(0.985);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .splash-title {
+          animation: none;
+        }
+        #pre {
+          transition: none;
+        }
+      }
+      .visually-hidden-focusable:not(:focus) {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
   </head>
-  <!-- Usamos atributos de Bootstrap para que el Scrollspy marque el link activo de la navbar mientras se scrollea. -->
+
   <body data-bs-spy="scroll" data-bs-target="#menu" data-bs-offset="80">
-    <!-- Barra superior que muestra progreso de scroll (se rellena con JS) -->
-    <div id="bar" class="progress-top"></div>
-    <!-- ========================================================= PRELOADER - Pantalla simple de carga que se oculta al terminar (lo maneja main.js) ========================================================= -->
+    <!-- Accesibilidad: salto directo al contenido -->
+    <a
+      href="#main-content"
+      class="visually-hidden-focusable"
+      title="Saltar al contenido (Alt+Shift+S)"
+      accesskey="s"
+      >Saltar al contenido</a
+    >
+
+    <!-- Barra superior de progreso (la maneja tu JS) -->
+    <div id="bar" class="progress-top" aria-hidden="true"></div>
+
+    <!-- PRELOADER / SPLASH (2s visibles) -->
     <div id="pre" aria-hidden="true">
-      <div class="text-center">
-        <div
-          class="spinner-border text-light mb-3"
-          role="status"
-          aria-label="Cargando"
-        ></div>
-        <h2 class="mb-0">Cargando…</h2>
-        <small class="text-muted">Acomodando todo ⚡</small>
+      <div class="text-center" role="img" aria-label="Logo de Alvaro Ruggeri">
+        <div class="splash-logo-emoji" aria-hidden="true">💻</div>
+        <div class="splash-title" aria-hidden="true">A.R.DEV</div>
+        <div class="splash-sub" aria-hidden="true">
+          Desarrollador de software
+        </div>
       </div>
     </div>
-    <!-- ========================================================= NAVBAR (FIJA ARRIBA, SEMITRANSPARENTE) - En mobile se colapsa y aparece “hamburguesa” - A la derecha: botón “Descargar CV” ========================================================= -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="nav">
+
+    <!-- NAVBAR -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark fixed-top"
+      id="nav"
+      role="navigation"
+    >
       <div class="container">
-        <!-- Marca / nombre -->
-        <a class="navbar-brand fw-bold" href="#inicio">Alvaro Ruggeri</a>
-        <!-- Botón hamburguesa (visible en móvil) -->
+        <a
+          class="navbar-brand fw-bold"
+          href="#inicio"
+          title="Ir al inicio (Alt+Shift+I)"
+          accesskey="i"
+          >Alvaro Ruggeri</a
+        >
+
         <button
           class="navbar-toggler"
           type="button"
@@ -86,98 +181,258 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <!-- Links a secciones (Scrollspy usa este #menu) -->
+
         <div class="collapse navbar-collapse" id="menu">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#sobre-mi">Sobre mí</a>
+              <a class="nav-link" href="#sobre-mi" accesskey="m">Sobre mí</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#habilidades">Habilidades</a>
+              <a class="nav-link" href="#como-trabajo" accesskey="w"
+                >¿Cómo trabajo?</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#tecnologias">Tecnologías</a>
+              <a class="nav-link" href="#habilidades" accesskey="h"
+                >Habilidades</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#servicios">Servicios</a>
+              <a class="nav-link" href="#tecnologias" accesskey="t"
+                >Tecnologías</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#proyectos">Proyectos</a>
+              <a class="nav-link" href="#servicios" accesskey="v">Servicios</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#contacto">Contacto</a>
+              <a class="nav-link" href="#faqs" accesskey="f">FAQs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contacto" accesskey="c">Contacto</a>
             </li>
           </ul>
-
-          >
         </div>
       </div>
     </nav>
-    <!-- ========================================================= HERO (PORTADA) - Fondo con degradés - Título con letras animadas y “shine” que cruza - Rotador de palabras (cambia con JS) - CTA “Ver proyectos / Hablemos” ========================================================= -->
+
+    <!-- HERO / Portada -->
     <header id="inicio" class="hero">
       <div class="container hero-inner" data-aos="fade-up">
-        <!-- Partículas decorativas (solo visual) -->
+        <!-- Partículas decorativas (ya las anima tu CSS/JS) -->
         <div class="sparks" aria-hidden="true">
           <span></span><span></span><span></span><span></span><span></span>
         </div>
-        <!-- Título con animación letra por letra -->
-        <h1 class="hero-title">
-          <span class="name-bling" aria-label="Alvaro Ruggeri">
-            <span>A</span><span>l</span><span>v</span><span>a</span
-            ><span>r</span><span>o</span>&nbsp; <span>R</span><span>u</span
-            ><span>g</span><span>g</span><span>e</span><span>r</span
-            ><span>i</span> <i class="shine" aria-hidden="true"></i>
+
+        <!-- Nombre gigante: MAYÚSCULAS y SIN tilde -->
+        <h1 class="hero-title" title="Nombre completo">
+          <span class="name-bling" aria-label="ALVARO RUGGERI">
+            <span>A</span><span>L</span><span>V</span><span>A</span
+            ><span>R</span><span>O</span>&nbsp; <span>R</span><span>U</span
+            ><span>G</span><span>G</span><span>E</span><span>R</span
+            ><span>I</span>
+            <i class="shine" aria-hidden="true"></i>
           </span>
         </h1>
-        <!-- Pastilla con “rotador” (contenido cambia en JS) -->
-        <div class="typing-pill" id="rotator" aria-live="polite">
-          <i class="fa-solid fa-bolt"></i> <span class="word">Developer</span>
+
+        <!-- Subtítulo claro (1 línea) -->
+        <p class="lead mt-2 mb-3" style="max-width: 720px; margin-inline: auto">
+          Desarrollo de <strong>sistemas a medida</strong>,
+          <strong>integraciones</strong> entre tus herramientas y
+          <strong>tableros de datos</strong> para decidir con claridad.
+        </p>
+
+        <!-- PÍLDORAS: 3 separadas (sin rotador) -->
+        <div
+          class="d-flex gap-2 justify-content-center flex-wrap mb-3"
+          aria-label="Especialidades"
+        >
+          <a href="#servicios" class="btn btn-dark rounded-pill px-3 py-2">
+            <i class="fa-solid fa-cubes me-1" aria-hidden="true"></i> Sistemas
+          </a>
+          <a href="#servicios" class="btn btn-dark rounded-pill px-3 py-2">
+            <i class="fa-solid fa-plug me-1" aria-hidden="true"></i>
+            Integraciones
+          </a>
+          <a href="#servicios" class="btn btn-dark rounded-pill px-3 py-2">
+            <i class="fa-solid fa-chart-line me-1" aria-hidden="true"></i> Datos
+          </a>
         </div>
-        <!-- Llamadas a la acción -->
+
+        <!-- CTA principal -->
         <div class="hero-cta">
-          <a href="#proyectos" class="btn btn-brand btn-lg btn-ripple"
-            >Ver proyectos</a
-          >
-          <a href="#contacto" class="btn btn-outline-light btn-lg btn-ripple"
+          <a
+            href="#contacto"
+            class="btn btn-outline-light btn-lg btn-ripple"
+            title="Ir al formulario de contacto"
             >Hablemos</a
           >
         </div>
+
+        <!-- Micro-confianza (más claro y tentador) -->
+        <small class="text-muted d-block mt-3" style="opacity: 0.95">
+          Presupuesto claro • Todo a tu nombre • Acompañamiento después del
+          lanzamiento
+        </small>
       </div>
     </header>
+
     <main id="main-content">
-      <!-- ======================================================= SOBRE MÍ - Presentación + “mini panel” con stack favorito ======================================================= -->
+      <!-- ¿CÓMO TRABAJO? — 3 bloques grandes, lenguaje simple -->
+      <section id="como-trabajo" class="py-5" aria-labelledby="proceso-title">
+        <div class="container" data-aos="fade-up">
+          <h2 class="fw-bold mb-4" id="proceso-title">¿Cómo trabajo?</h2>
+
+          <div class="row g-4">
+            <!-- Bloque 1 -->
+            <div class="col-12">
+              <article
+                class="p-4 rounded-4 border-0"
+                data-step="1"
+                data-animate="elevate"
+                tabindex="0"
+              >
+                <header class="d-flex align-items-center gap-2 mb-2">
+                  <span class="badge text-bg-dark rounded-pill"
+                    ><i class="fa-solid fa-compass"></i
+                  ></span>
+                  <h3 class="h4 mb-0">1) Entender tu negocio</h3>
+                </header>
+                <p class="text-muted">
+                  Lo primero es escuchar y ordenar ideas: ¿qué querés lograr?,
+                  ¿qué tenés en mente?, ¿qué te complica hoy? Priorizamos juntos
+                  y definimos qué querés ver funcionando y en qué plazos.
+                </p>
+                <ul class="mb-0">
+                  <li>
+                    Charla inicial (20–40 min): objetivos, público y forma de
+                    trabajo actual.
+                  </li>
+                  <li>Lista simple de imprescindibles vs. “lindo tener”.</li>
+                  <li>Si hace falta, firmamos confidencialidad.</li>
+                  <li>
+                    <strong>Entrega:</strong> resumen claro + estimación de
+                    tiempo e inversión.
+                  </li>
+                </ul>
+              </article>
+            </div>
+
+            <!-- Bloque 2 -->
+            <div class="col-12">
+              <article
+                class="p-4 rounded-4 border-0"
+                data-step="2"
+                data-animate="elevate"
+                tabindex="0"
+              >
+                <header class="d-flex align-items-center gap-2 mb-2">
+                  <span class="badge text-bg-dark rounded-pill"
+                    ><i class="fa-solid fa-puzzle-piece"></i
+                  ></span>
+                  <h3 class="h4 mb-0">2) Diseñar la solución</h3>
+                </header>
+                <p class="text-muted">
+                  Te muestro cómo va a ser antes de construir. Propongo la
+                  estructura del sistema y un prototipo navegable para validar
+                  el flujo. Planificamos datos e integraciones.
+                </p>
+                <ul class="mb-0">
+                  <li>
+                    Arquitectura por módulos: pantallas, usuarios y permisos.
+                  </li>
+                  <li>
+                    <strong>Prototipo</strong> (link privado) para acordar UX.
+                  </li>
+                  <li>
+                    Plan de datos y conexiones: pagos, WhatsApp, planillas,
+                    ERPs, etc.
+                  </li>
+                  <li>
+                    <strong>Entrega:</strong> plan por etapas con fechas y
+                    precio cerrado.
+                  </li>
+                </ul>
+              </article>
+            </div>
+
+            <!-- Bloque 3 -->
+            <div class="col-12">
+              <article
+                class="p-4 rounded-4 border-0"
+                data-step="3"
+                data-animate="elevate"
+                tabindex="0"
+              >
+                <header class="d-flex align-items-center gap-2 mb-2">
+                  <span class="badge text-bg-dark rounded-pill"
+                    ><i class="fa-solid fa-rocket"></i
+                  ></span>
+                  <h3 class="h4 mb-0">3) Construir, probar y publicar</h3>
+                </header>
+                <p class="text-muted">
+                  Avances semanales y cero sorpresas. Probamos en un entorno de
+                  pruebas y luego publicamos. Te dejo accesos y una guía corta
+                  para usar todo con confianza.
+                </p>
+                <ul class="mb-0">
+                  <li>
+                    Sprints con <strong>demos</strong> para ver el progreso.
+                  </li>
+                  <li>
+                    Entorno de <strong>pruebas</strong> antes de producción.
+                  </li>
+                  <li>Publicación en tu dominio o nube + monitoreo inicial.</li>
+                  <li>
+                    Capacitación express, documentación y
+                    <strong>garantía</strong> inicial.
+                  </li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOBRE MÍ -->
       <section id="sobre-mi" class="py-5" aria-labelledby="sobre-mi-title">
         <div class="container" data-aos="fade-right">
           <h2 class="fw-bold mb-3" id="sobre-mi-title">Sobre mí</h2>
           <div class="row align-items-center g-4">
             <div class="col-lg-7">
               <p class="text-muted">
-                Desarrollador web de Córdoba. Me enfoco en interfaces rápidas,
-                accesibles y con estética moderna. Trabajo con
-                <strong>HTML/CSS/JS, Bootstrap y React/Next.js</strong>,
-                cuidando SEO y performance.
+                Soy desarrollador de software de Córdoba. Trabajo punta a punta:
+                idea → prototipo → sistema en producción. Enfoque en
+                <strong>sistemas a medida</strong>,
+                <strong>integraciones</strong> y
+                <strong>tableros de datos</strong>.
               </p>
-              <ul class="text-muted">
-                <li>Landing pages de conversión y sitios corporativos.</li>
+              <ul class="text-muted" data-list="bullets" data-animate="enter">
+                <li>Sistemas internos, automatizaciones y APIs.</li>
                 <li>
-                  Integraciones: WhatsApp, Maps, Analytics, formularios y email.
+                  Integraciones: pagos, ERP/CRM, email/WhatsApp, analítica.
                 </li>
                 <li>
-                  Deploy ágil (Vercel/Netlify) y control de versiones con Git.
+                  Deploy en Vercel/Render/AWS y control de versiones con Git.
                 </li>
               </ul>
             </div>
-            <!-- Panel decorativo con chips del stack -->
+
             <div class="col-lg-5">
-              <div
+              <figure
                 class="p-4 rounded-4"
                 style="
                   background: linear-gradient(135deg, #1a1f2b 0%, #0e1118 100%);
                   border: 1px solid #ffffff14;
                 "
+                data-animate="tilt"
               >
-                <p class="mb-2 text-muted">Stack favorito</p>
-                <div class="d-flex flex-wrap gap-2">
+                <figcaption class="mb-2 text-muted">Stack favorito</figcaption>
+                <div
+                  class="d-flex flex-wrap gap-2"
+                  role="list"
+                  aria-label="Tecnologías favoritas"
+                >
                   <span class="badge text-bg-dark border">HTML</span>
                   <span class="badge text-bg-dark border">CSS</span>
                   <span class="badge text-bg-dark border">Bootstrap</span>
@@ -186,14 +441,15 @@
                   <span class="badge text-bg-dark border">Next.js</span>
                 </div>
                 <p class="mt-3 mb-0 text-muted">
-                  Código claro, micro-interacciones y foco en resultados.
+                  UX clara, performance y resultados medibles.
                 </p>
-              </div>
+              </figure>
             </div>
           </div>
         </div>
       </section>
-      <!-- ======================================================= HABILIDADES - Barras con porcentaje (se animan al entrar en pantalla) ======================================================= -->
+
+      <!-- HABILIDADES -->
       <section
         id="habilidades"
         class="py-5 bg-light"
@@ -203,12 +459,24 @@
           <h2 class="fw-bold text-center mb-5" id="habilidades-title">
             Habilidades
           </h2>
+
           <div class="row">
-            <!-- data-target indica el % final de cada barra (animado con JS) -->
             <div class="col-md-6 mb-4">
-              <div class="skill-card tilt" data-aos="fade-up">
+              <div
+                class="skill-card tilt"
+                data-aos="fade-up"
+                tabindex="0"
+                title="HTML/CSS — 90%"
+              >
                 <p class="mb-1">HTML / CSS</p>
-                <div class="progress">
+                <div
+                  class="progress"
+                  role="progressbar"
+                  aria-label="Dominio de HTML y CSS"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow="0"
+                >
                   <div
                     class="progress-bar bg-primary"
                     style="width: 0%"
@@ -224,9 +492,18 @@
                 class="skill-card tilt"
                 data-aos="fade-up"
                 data-aos-delay="100"
+                tabindex="0"
+                title="JavaScript/Node — 80%"
               >
-                <p class="mb-1">JavaScript</p>
-                <div class="progress">
+                <p class="mb-1">JavaScript / Node</p>
+                <div
+                  class="progress"
+                  role="progressbar"
+                  aria-label="Dominio de JavaScript/Node"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow="0"
+                >
                   <div
                     class="progress-bar bg-success"
                     style="width: 0%"
@@ -242,9 +519,18 @@
                 class="skill-card tilt"
                 data-aos="fade-up"
                 data-aos-delay="200"
+                tabindex="0"
+                title="Bases de datos / SQL — 85%"
               >
-                <p class="mb-1">Bootstrap</p>
-                <div class="progress">
+                <p class="mb-1">Bases de datos / SQL</p>
+                <div
+                  class="progress"
+                  role="progressbar"
+                  aria-label="Dominio de bases de datos y SQL"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow="0"
+                >
                   <div
                     class="progress-bar bg-info"
                     style="width: 0%"
@@ -260,13 +546,22 @@
                 class="skill-card tilt"
                 data-aos="fade-up"
                 data-aos-delay="300"
+                tabindex="0"
+                title="React/Next.js — 75%"
               >
                 <p class="mb-1">React / Next.js</p>
-                <div class="progress">
+                <div
+                  class="progress"
+                  role="progressbar"
+                  aria-label="Dominio de React y Next.js"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow="0"
+                >
                   <div
                     class="progress-bar bg-warning"
                     style="width: 0%"
-                    data-target="70"
+                    data-target="75"
                   >
                     0%
                   </div>
@@ -276,154 +571,542 @@
           </div>
         </div>
       </section>
-      <!-- ======================================================= TECNOLOGÍAS (grilla con Devicon) ======================================================= -->
+
+      <!-- TECNOLOGÍAS (cada item con “Ver más”) -->
       <section id="tecnologias" class="py-5" aria-labelledby="tec-title">
         <div class="container">
           <h2 class="fw-bold text-center mb-4" id="tec-title">Tecnologías</h2>
           <p class="text-center text-muted mb-4">
-            Algunas herramientas con las que trabajo en el día a día.
+            Herramientas con las que trabajo día a día.
           </p>
-          <div class="tech-grid">
-            <div class="tech-item" data-aos="zoom-in">
-              <i class="devicon-html5-plain colored"></i><span>HTML5</span>
+
+          <div
+            class="tech-grid"
+            role="list"
+            aria-label="Listado de tecnologías"
+          >
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              role="listitem"
+              title="HTML5"
+            >
+              <i class="devicon-html5-plain colored" aria-hidden="true"></i
+              ><span>HTML5</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Semántica, accesibilidad y base de SEO.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="60">
-              <i class="devicon-css3-plain colored"></i><span>CSS3</span>
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="60"
+              role="listitem"
+              title="CSS3"
+            >
+              <i class="devicon-css3-plain colored" aria-hidden="true"></i
+              ><span>CSS3</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Layouts fluidos, responsive y animaciones.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="120">
-              <i class="devicon-javascript-plain colored"></i
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="120"
+              role="listitem"
+              title="JavaScript"
+            >
+              <i class="devicon-javascript-plain colored" aria-hidden="true"></i
               ><span>JavaScript</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Interacciones dinámicas y lógica de negocio.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="180">
-              <i class="devicon-react-original colored"></i><span>React</span>
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="180"
+              role="listitem"
+              title="React"
+            >
+              <i class="devicon-react-original colored" aria-hidden="true"></i
+              ><span>React</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Componentes reutilizables y estado.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="240">
-              <i class="devicon-nextjs-plain"></i><span>Next.js</span>
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="240"
+              role="listitem"
+              title="Next.js"
+            >
+              <i class="devicon-nextjs-plain" aria-hidden="true"></i
+              ><span>Next.js</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>SSR/SSG, rutas y performance.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="300">
-              <i class="devicon-bootstrap-plain colored"></i
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="300"
+              role="listitem"
+              title="Bootstrap"
+            >
+              <i class="devicon-bootstrap-plain colored" aria-hidden="true"></i
               ><span>Bootstrap</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Grilla y componentes rápidos.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="360">
-              <i class="devicon-nodejs-plain colored"></i><span>Node.js</span>
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="360"
+              role="listitem"
+              title="Node.js"
+            >
+              <i class="devicon-nodejs-plain colored" aria-hidden="true"></i
+              ><span>Node.js</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>APIs, servicios y automatizaciones.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="420">
-              <i class="devicon-git-plain colored"></i><span>Git</span>
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="420"
+              role="listitem"
+              title="Git"
+            >
+              <i class="devicon-git-plain colored" aria-hidden="true"></i
+              ><span>Git</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Flujos de trabajo limpios (PRs, ramas).</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="480">
-              <i class="devicon-figma-plain colored"></i><span>Figma</span>
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="480"
+              role="listitem"
+              title="Figma"
+            >
+              <i class="devicon-figma-plain colored" aria-hidden="true"></i
+              ><span>Figma</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Prototipos y handoff colaborativo.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="540">
-              <i class="devicon-mysql-plain colored"></i><span>SQL</span>
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="540"
+              role="listitem"
+              title="SQL"
+            >
+              <i class="devicon-mysql-plain colored" aria-hidden="true"></i
+              ><span>SQL</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Modelo de datos, consultas y reportes.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="600">
-              <i class="devicon-vuejs-plain colored"></i
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="600"
+              role="listitem"
+              title="Vue (bases)"
+            >
+              <i class="devicon-vuejs-plain colored" aria-hidden="true"></i
               ><span>Vue (bases)</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Reactividad simple, componentes.</small>
+              </details>
             </div>
-            <div class="tech-item" data-aos="zoom-in" data-aos-delay="660">
-              <i class="devicon-laravel-plain colored"></i
+            <div
+              class="tech-item"
+              data-aos="zoom-in"
+              data-aos-delay="660"
+              role="listitem"
+              title="Laravel (bases)"
+            >
+              <i class="devicon-laravel-plain colored" aria-hidden="true"></i
               ><span>Laravel (bases)</span>
+              <details>
+                <summary>Ver más</summary>
+                <small>Routing, Eloquent y blades.</small>
+              </details>
             </div>
           </div>
         </div>
       </section>
-      <!-- ======================================================= SERVICIOS ======================================================= -->
+
+      <!-- SERVICIOS (incluye Analítica & Datos) -->
       <section id="servicios" class="py-5" aria-labelledby="servicios-title">
         <div class="container text-center">
           <h2 class="fw-bold mb-5" id="servicios-title">Servicios</h2>
+
           <div class="row g-4">
-            <div class="col-md-4">
-              <div class="service-card tilt" data-aos="zoom-in">
-                <i class="fas fa-code svc-icon svc-blue" aria-hidden="true"></i>
-                <h5>Desarrollo Web</h5>
-                <p class="text-muted mb-0">UI limpia, accesible y rápida.</p>
-              </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-3">
               <div
-                class="service-card tilt"
+                class="service-card tilt h-100"
                 data-aos="zoom-in"
-                data-aos-delay="120"
+                data-animate="hover-glow"
+                tabindex="0"
+                title="Desarrollo a medida"
               >
                 <i
-                  class="fas fa-mobile-alt svc-icon svc-green"
+                  class="fas fa-cubes svc-icon svc-blue"
                   aria-hidden="true"
                 ></i>
-                <h5>Responsive</h5>
-                <p class="text-muted mb-0">
-                  Se adapta perfecto a cada pantalla.
+                <h5>Desarrollo a medida</h5>
+                <p class="text-muted mb-2">
+                  Sistemas, paneles internos, APIs e integraciones.
                 </p>
+                <details>
+                  <summary>Ver más</summary>
+                  <ul class="text-start mt-2 mb-0">
+                    <li>Arquitectura modular y escalable.</li>
+                    <li>Automatizaciones y flujos a tu medida.</li>
+                    <li>Buenas prácticas de accesibilidad y SEO on-page.</li>
+                  </ul>
+                </details>
               </div>
             </div>
-            <div class="col-md-4">
+
+            <div class="col-md-6 col-lg-3">
               <div
-                class="service-card tilt"
+                class="service-card tilt h-100"
+                data-aos="zoom-in"
+                data-aos-delay="120"
+                data-animate="hover-glow"
+                tabindex="0"
+                title="Integraciones"
+              >
+                <i
+                  class="fas fa-plug svc-icon svc-green"
+                  aria-hidden="true"
+                ></i>
+                <h5>Integraciones</h5>
+                <p class="text-muted mb-2">
+                  Conecto tus herramientas para ahorrar tiempo.
+                </p>
+                <details>
+                  <summary>Ver más</summary>
+                  <ul class="text-start mt-2 mb-0">
+                    <li>Pagos (MercadoPago/Stripe) y envíos.</li>
+                    <li>ERP/CRM, email y WhatsApp.</li>
+                    <li>Sincronización con planillas/APIs.</li>
+                  </ul>
+                </details>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <div
+                class="service-card tilt h-100"
                 data-aos="zoom-in"
                 data-aos-delay="220"
+                data-animate="hover-glow"
+                tabindex="0"
+                title="SEO & Performance"
               >
                 <i
                   class="fas fa-rocket svc-icon svc-red"
                   aria-hidden="true"
                 ></i>
                 <h5>SEO & Performance</h5>
-                <p class="text-muted mb-0">
-                  Buenas prácticas y Core Web Vitals.
+                <p class="text-muted mb-2">
+                  Velocidad, métricas y posicionamiento técnico.
                 </p>
+                <details>
+                  <summary>Ver más</summary>
+                  <ul class="text-start mt-2 mb-0">
+                    <li>Meta tags, OG/Twitter Cards y sitemap.</li>
+                    <li>LCP/CLS/INP medidos y mejoras iniciales.</li>
+                    <li>Analítica lista para medir resultados.</li>
+                  </ul>
+                </details>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <div
+                class="service-card tilt h-100"
+                data-aos="zoom-in"
+                data-aos-delay="300"
+                data-animate="hover-glow"
+                tabindex="0"
+                title="Analítica & Datos"
+              >
+                <i class="fas fa-chart-line svc-icon" aria-hidden="true"></i>
+                <h5>Analítica & Datos</h5>
+                <p class="text-muted mb-2">
+                  Tableros, reportes y decisiones con números.
+                </p>
+                <details>
+                  <summary>Ver más</summary>
+                  <ul class="text-start mt-2 mb-0">
+                    <li>Unificación de fuentes (planillas, APIs, sistemas).</li>
+                    <li>KPIs claros para ventas, operaciones y marketing.</li>
+                    <li>Dashboards (Looker/Sheets) y alertas automáticas.</li>
+                  </ul>
+                </details>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <!-- ======================================================= PROYECTOS ======================================================= -->
-      <section
-        id="proyectos"
-        class="py-5 bg-light"
-        aria-labelledby="proyectos-title"
-      >
+
+      <!-- PREGUNTAS FRECUENTES — más “diseño” solo con HTML (cards + icons + summary) -->
+      <section id="faqs" class="py-5 bg-light" aria-labelledby="faqs-title">
         <div class="container">
-          <h2 class="fw-bold text-center mb-4" id="proyectos-title">
-            Proyectos
+          <h2 class="fw-bold text-center mb-5" id="faqs-title">
+            Preguntas frecuentes
           </h2>
-          <div class="row g-4">
-            <div class="col-md-4">
-              <div class="card h-100 p-2 tilt">
+
+          <!-- Grid de tarjetas FAQ: utilizo Bootstrap (card/border/shadow/spacing) -->
+          <div
+            class="row g-4"
+            role="list"
+            aria-label="Listado de preguntas frecuentes"
+          >
+            <!-- FAQ 1 -->
+            <div class="col-lg-6" role="listitem">
+              <article class="card h-100 border-0 shadow-sm" data-faq="tiempos">
+                <header class="card-header bg-transparent">
+                  <i class="fa-regular fa-clock me-2" aria-hidden="true"></i>
+                  <strong>¿Cuánto tarda?</strong>
+                </header>
                 <div class="card-body">
-                  <h5 class="card-title">Lavadero Premium</h5>
-                  <p class="card-text">
-                    Landing con agenda y WhatsApp directo.
-                  </p>
-                  <a href="#" class="btn btn-sm btn-brand btn-ripple"
-                    >Ver online</a
-                  >
+                  <details open>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      Un sitio simple o un panel chico:
+                      <strong>1 a 3 semanas</strong>. Sistemas más grandes
+                      dependen del alcance que definamos juntos.
+                    </p>
+                  </details>
                 </div>
-              </div>
+              </article>
             </div>
-            <div class="col-md-4">
-              <div class="card h-100 p-2 tilt">
+
+            <!-- FAQ 2 -->
+            <div class="col-lg-6" role="listitem">
+              <article
+                class="card h-100 border-0 shadow-sm"
+                data-faq="comienzo"
+              >
+                <header class="card-header bg-transparent">
+                  <i
+                    class="fa-regular fa-handshake me-2"
+                    aria-hidden="true"
+                  ></i>
+                  <strong>¿Qué necesitás para empezar?</strong>
+                </header>
                 <div class="card-body">
-                  <h5 class="card-title">Portfolio Locutora</h5>
-                  <p class="card-text">Audio player, galería y prensa.</p>
-                  <a href="#" class="btn btn-sm btn-brand btn-ripple"
-                    >Ver online</a
-                  >
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <ul class="mt-2 mb-0">
+                      <li>
+                        Qué querés lograr y una lista de lo imprescindible.
+                      </li>
+                      <li>Ejemplos de referencia.</li>
+                      <li>Datos de prueba y accesos (si hay).</li>
+                    </ul>
+                  </details>
                 </div>
-              </div>
+              </article>
             </div>
-            <div class="col-md-4">
-              <div class="card h-100 p-2 tilt">
+
+            <!-- FAQ 3 -->
+            <div class="col-lg-6" role="listitem">
+              <article class="card h-100 border-0 shadow-sm" data-faq="dominio">
+                <header class="card-header bg-transparent">
+                  <i class="fa-solid fa-globe me-2" aria-hidden="true"></i>
+                  <strong>¿Incluye dominio y hosting?</strong>
+                </header>
                 <div class="card-body">
-                  <h5 class="card-title">Reservas Barbería</h5>
-                  <p class="card-text">Turnos y recordatorios por mail.</p>
-                  <a href="#" class="btn btn-sm btn-brand btn-ripple"
-                    >Ver online</a
-                  >
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      Te ayudo a elegir y configurar. Todo queda
+                      <strong>a tu nombre</strong> (dominio, cuentas y
+                      facturación).
+                    </p>
+                  </details>
                 </div>
-              </div>
+              </article>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="col-lg-6" role="listitem">
+              <article class="card h-100 border-0 shadow-sm" data-faq="pago">
+                <header class="card-header bg-transparent">
+                  <i class="fa-solid fa-receipt me-2" aria-hidden="true"></i>
+                  <strong>¿Cómo se paga?</strong>
+                </header>
+                <div class="card-body">
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      Frecuente: <strong>50% al inicio</strong> y
+                      <strong>50% antes de publicar</strong>. En proyectos
+                      grandes, por etapas.
+                    </p>
+                  </details>
+                </div>
+              </article>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="col-lg-6" role="listitem">
+              <article class="card h-100 border-0 shadow-sm" data-faq="codigo">
+                <header class="card-header bg-transparent">
+                  <i class="fa-solid fa-key me-2" aria-hidden="true"></i>
+                  <strong>¿Quién es dueño del código?</strong>
+                </header>
+                <div class="card-body">
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      <strong>Vos.</strong> El repositorio y accesos quedan a tu
+                      nombre. Podemos firmar NDA si lo necesitás.
+                    </p>
+                  </details>
+                </div>
+              </article>
+            </div>
+
+            <!-- FAQ 6 -->
+            <div class="col-lg-6" role="listitem">
+              <article class="card h-100 border-0 shadow-sm" data-faq="editar">
+                <header class="card-header bg-transparent">
+                  <i
+                    class="fa-regular fa-pen-to-square me-2"
+                    aria-hidden="true"
+                  ></i>
+                  <strong>¿Voy a poder editar el contenido?</strong>
+                </header>
+                <div class="card-body">
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      Sí. Podemos dejar edición simple o integrar un CMS
+                      liviano, según lo que necesites.
+                    </p>
+                  </details>
+                </div>
+              </article>
+            </div>
+
+            <!-- FAQ 7 -->
+            <div class="col-lg-6" role="listitem">
+              <article
+                class="card h-100 border-0 shadow-sm"
+                data-faq="escalado"
+              >
+                <header class="card-header bg-transparent">
+                  <i
+                    class="fa-solid fa-layer-group me-2"
+                    aria-hidden="true"
+                  ></i>
+                  <strong>¿Se puede escalar después?</strong>
+                </header>
+                <div class="card-body">
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      Sí. Armamos la solución por módulos para agregar funciones
+                      sin romper lo existente.
+                    </p>
+                  </details>
+                </div>
+              </article>
+            </div>
+
+            <!-- FAQ 8 -->
+            <div class="col-lg-6" role="listitem">
+              <article
+                class="card h-100 border-0 shadow-sm"
+                data-faq="integraciones"
+              >
+                <header class="card-header bg-transparent">
+                  <i class="fa-solid fa-plug me-2" aria-hidden="true"></i>
+                  <strong>¿Trabajás con integraciones?</strong>
+                </header>
+                <div class="card-body">
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      Sí: pagos (MercadoPago/Stripe), envíos, ERPs/CRMs,
+                      email/WhatsApp, analítica y más.
+                    </p>
+                  </details>
+                </div>
+              </article>
+            </div>
+
+            <!-- FAQ 9 -->
+            <div class="col-lg-6" role="listitem">
+              <article class="card h-100 border-0 shadow-sm" data-faq="calidad">
+                <header class="card-header bg-transparent">
+                  <i
+                    class="fa-regular fa-square-check me-2"
+                    aria-hidden="true"
+                  ></i>
+                  <strong>¿Cómo asegurás la calidad?</strong>
+                </header>
+                <div class="card-body">
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      Demos semanales, entorno de pruebas y lista de chequeo.
+                      Corregimos antes de publicar.
+                    </p>
+                  </details>
+                </div>
+              </article>
+            </div>
+
+            <!-- FAQ 10 -->
+            <div class="col-lg-6" role="listitem">
+              <article class="card h-100 border-0 shadow-sm" data-faq="datos">
+                <header class="card-header bg-transparent">
+                  <i class="fa-solid fa-chart-line me-2" aria-hidden="true"></i>
+                  <strong>¿Ofrecés análisis de datos?</strong>
+                </header>
+                <div class="card-body">
+                  <details>
+                    <summary class="text-muted">Ver respuesta</summary>
+                    <p class="mt-2 mb-0">
+                      Sí. Unifico fuentes, creo tableros con métricas clave y
+                      puedo configurar alertas y reportes automáticos.
+                    </p>
+                  </details>
+                </div>
+              </article>
             </div>
           </div>
         </div>
       </section>
-      <!-- ======================================================= CONTACTO ⚠️ Clave para el JS: - id del form = "contact-form" - ids de campos = #nombre, #telefono, #email, #mensaje Nota: NO poner comentarios dentro de <form> o <input>. ======================================================= -->
+
+      <!-- CONTACTO (IDs/names intactos) -->
       <section
         id="contacto"
         class="py-5 text-center"
@@ -431,8 +1114,9 @@
       >
         <div class="container">
           <h2 class="fw-bold mb-4" id="contacto-title">Contacto</h2>
+
           <div class="contact-wrap">
-            <!-- Lado izquierdo: mensaje y datos -->
+            <!-- Lado izquierdo -->
             <div class="contact-left" data-aos="fade-right">
               <div class="d-flex align-items-center gap-3 mb-3">
                 <div
@@ -450,6 +1134,7 @@
                   <i
                     class="fa-regular fa-comments"
                     style="color: var(--neon); font-size: 20px"
+                    aria-hidden="true"
                   ></i>
                 </div>
                 <div>
@@ -457,35 +1142,53 @@
                   <div class="contact-sub">¡Hablemos!</div>
                 </div>
               </div>
+
               <div class="contact-bullets text-start">
                 <div class="mb-2">
-                  <i class="fa-solid fa-envelope me-2"></i>
-                  <a href="mailto:alvaroruggeri2@gmail.com"
+                  <i class="fa-solid fa-envelope me-2" aria-hidden="true"></i>
+                  <a
+                    href="mailto:alvaroruggeri2@gmail.com"
+                    title="Enviar correo"
                     >alvaroruggeri2@gmail.com</a
                   >
                 </div>
                 <div class="mb-2">
-                  <i class="fa-brands fa-whatsapp me-2"></i>
+                  <i class="fa-brands fa-whatsapp me-2" aria-hidden="true"></i>
                   <a
                     href="https://wa.me/5493884883844"
                     target="_blank"
                     rel="noopener"
+                    title="Abrir WhatsApp"
                     >+54 9 3884 883844</a
                   >
                 </div>
                 <small class="d-block text-muted mt-3"
                   >Tiempo de respuesta: dentro del día ✨</small
                 >
+
+                <details class="mt-3">
+                  <summary><strong>Privacidad</strong> (leer)</summary>
+                  <p class="text-muted mt-2 mb-0">
+                    Tu mensaje va directo a mi correo. No comparto datos con
+                    terceros.
+                  </p>
+                </details>
               </div>
             </div>
-            <!-- Lado derecho: formulario “glass” (validación en JS) -->
+
+            <!-- Formulario -->
             <form
               id="contact-form"
               class="text-start"
               novalidate
               data-aos="fade-left"
+              aria-describedby="contacto-ayuda"
             >
-              <!-- 🛡️ Honeypot anti-spam -->
+              <p id="contacto-ayuda" class="visually-hidden">
+                Todos los campos con * son obligatorios.
+              </p>
+
+              <!-- Honeypot anti-spam -->
               <input
                 type="text"
                 id="website"
@@ -493,53 +1196,65 @@
                 style="display: none"
                 tabindex="-1"
                 autocomplete="off"
+                title="Dejar vacío"
               />
 
               <div class="row g-3">
                 <div class="col-md-6">
+                  <label for="nombre" class="form-label"
+                    >Nombre completo *</label
+                  >
                   <input
                     type="text"
                     class="form-control glass"
                     id="nombre"
                     name="nombre"
-                    placeholder="Nombre completo"
+                    placeholder="Tu nombre y apellido"
                     autocomplete="name"
                     required
                   />
                   <div class="invalid-feedback">Decime tu nombre 😉</div>
                 </div>
                 <div class="col-md-6">
+                  <label for="telefono" class="form-label"
+                    >Teléfono (opcional)</label
+                  >
                   <input
                     type="tel"
                     class="form-control glass"
                     id="telefono"
                     name="telefono"
-                    placeholder="Teléfono (opcional)"
+                    placeholder="Ej: +54 9 351 ..."
                     autocomplete="tel"
                   />
                 </div>
                 <div class="col-md-6">
+                  <label for="email" class="form-label">E-mail *</label>
                   <input
                     type="email"
                     class="form-control glass"
                     id="email"
                     name="email"
-                    placeholder="E-mail"
+                    placeholder="tucorreo@ejemplo.com"
                     autocomplete="email"
                     required
                   />
                   <div class="invalid-feedback">Poné un email válido 🙏</div>
                 </div>
                 <div class="col-md-6">
+                  <label for="asunto" class="form-label"
+                    >Asunto (opcional)</label
+                  >
                   <input
                     type="text"
                     class="form-control glass"
                     id="asunto"
                     name="asunto"
-                    placeholder="Asunto (opcional)"
+                    placeholder="Consulta / Presupuesto / Otro"
                   />
                 </div>
                 <div class="col-12">
+                  <label for="mensaje" class="form-label">Mensaje *</label>
                   <textarea
                     class="form-control glass"
                     id="mensaje"
@@ -554,34 +1269,82 @@
                   </div>
                 </div>
                 <div class="col-12 d-grid d-sm-block">
-                  <button class="btn btn-neon btn-lg btn-ripple" type="submit">
-                    <i class="fa-solid fa-paper-plane me-2"></i> Enviar mensaje
+                  <button
+                    class="btn btn-neon btn-lg btn-ripple"
+                    type="submit"
+                    title="Enviar formulario"
+                  >
+                    <i
+                      class="fa-solid fa-paper-plane me-2"
+                      aria-hidden="true"
+                    ></i>
+                    Enviar mensaje
                   </button>
                 </div>
               </div>
+
+              <details class="mt-3">
+                <summary><strong>¿Qué incluir en tu mensaje?</strong></summary>
+                <ul class="mt-2">
+                  <li>Qué querés lograr.</li>
+                  <li>Qué es imprescindible que tenga.</li>
+                  <li>Ejemplos de sistemas o sitios que te gustan.</li>
+                </ul>
+              </details>
             </form>
           </div>
         </div>
       </section>
     </main>
-    <!-- ========================================================= FOOTER ========================================================= -->
+
+    <!-- FOOTER -->
     <footer class="py-4 text-center" role="contentinfo">
       <p class="mb-0">Hecho con ❤️</p>
     </footer>
-    <!-- ========================================================= BOTÓN FLOTANTE DE WHATSAPP ========================================================= -->
+
+    <!-- FAB WhatsApp -->
     <a
       class="wsp-fab"
       href="https://wa.me/5493884883844"
       target="_blank"
       rel="noopener"
       aria-label="Abrir WhatsApp"
+      title="WhatsApp directo"
     >
-      <i class="fa-brands fa-whatsapp"></i>
+      <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
       <span class="tip">Escribime por WhatsApp</span>
     </a>
-    <!-- ========================================================= SCRIPTS (al final para que cargue más rápido) - Primero librerías - Después tu main.js (inicializa AOS, preloader, barras, tilt, etc.) ⚠️ Ruta actual: js/main.js (si tu archivo está en assets/js, cambiá a assets/js/main.js) ========================================================= -->
+
+    <!-- JS base + AOS + tu main.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <!-- Control del SPLASH (2s visibles + 0.5s de fade) -->
+    <script>
+      (function () {
+        const pre = document.getElementById("pre");
+        const MIN_VISIBLE_MS = 2000; // 2 s
+        const FADE_MS = 500;
+        const start = Date.now();
+        document.documentElement.classList.add("splash-lock");
+        document.body.classList.add("splash-lock");
+        function hideSplash() {
+          const elapsed = Date.now() - start;
+          const wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
+          setTimeout(() => {
+            pre.classList.add("hide");
+            document.documentElement.classList.remove("splash-lock");
+            document.body.classList.remove("splash-lock");
+            setTimeout(() => pre.remove(), FADE_MS + 50);
+          }, wait);
+        }
+        if (document.readyState === "complete") hideSplash();
+        else window.addEventListener("load", hideSplash);
+      })();
+    </script>
+
+    <!-- Tu JS (barras/validaciones/efectos)
+    -->
     <script src="js/main.js"></script>
   </body>
 </html>

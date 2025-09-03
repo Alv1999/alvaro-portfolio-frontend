@@ -19,7 +19,7 @@ const isProd =
 const API_BASE = isLiveServer
   ? "http://127.0.0.1:4000"
   : isProd
-  ? "https://alvaro-portfolio-backend.onrender.com" // ✅ backend real en Render
+  ? "https://TU-BACKEND.onrender.com" // <-- cuando publiques el backend, cambiá esto UNA sola vez
   : "http://127.0.0.1:4000";
 
 console.log("main.js cargado ✅  |  API_BASE:", API_BASE);

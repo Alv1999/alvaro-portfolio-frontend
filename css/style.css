@@ -1,106 +1,187 @@
-/* =========================================================
-   VARIABLES DE COLOR Y AJUSTES GENERALES
-   - Usamos "variables CSS" para definir colores y reutilizarlos.
-   - Si cambiás un color acá, se actualiza en todo el sitio.
-========================================================= */
+/* ==========================================================================
+   PORTAFOLIO — CSS PRO PACK
+   - Diseño escalable por tokens
+   - Tipografías fluidas (clamp)
+   - Componentes premium: hero, chips, servicios, pasos, FAQs, contacto
+   - Accesibilidad, skeletons, motion-reduce, print y modo claro opcional
+   -------------------------------------------------------------------------- */
+
+/* =============================== TOKENS ================================== */
 :root {
-  --bg: #0f1115; /* color de fondo principal (oscuro) */
-  --bg2: #0b0d11; /* fondo secundario, un poco más oscuro */
-  --text: #e9e9e9; /* color del texto (blanco/gris claro) */
-  --muted: #b9b9b9; /* color de texto secundario/menos importante */
-  --brand: #6c5ce7; /* violeta: color de marca / botones principales */
-  --brand2: #00d4ff; /* cian: segundo color de marca / acentos */
-  --neon: #27ef9f; /* verde neón: se usa en contacto/whatsapp */
+  /* Colores base (dark) */
+  --bg: #0f1115;
+  --bg2: #0b0d11;
+  --surface: #0f1724;
+  --surface-2: #0a1018;
+
+  --text: #e9e9e9;
+  --muted: #b9b9b9;
+
+  --brand: #6c5ce7; /* violeta (marca) */
+  --brand2: #00d4ff; /* cian (acento) */
+  --neon: #27ef9f; /* verde (cta/contacto) */
+
+  --ring: #2a3750; /* borde/enfoque */
+
+  /* Escalas */
+  --radius: 18px;
+  --r-2: 12px;
+  --r-3: 18px;
+  --r-4: 24px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 40px;
+
+  --shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 22px 70px rgba(0, 0, 0, 0.35);
+
+  /* Tipografía fluida */
+  --fs-hero: clamp(2.6rem, 6vw, 4.2rem);
+  --fs-h1: clamp(2rem, 3.8vw, 3rem);
+  --fs-h2: clamp(1.6rem, 3vw, 2.2rem);
+  --fs-h3: clamp(1.3rem, 2.2vw, 1.6rem);
+  --fs-body: clamp(1rem, 1.2vw, 1.05rem);
+  --lh-tight: 1.15;
+  --lh-cozy: 1.35;
+  --lh-relaxed: 1.6;
 }
 
+/* ================================ BASE =================================== */
 html {
-  /* Efecto de scroll suave cuando hacés clic en enlaces de ancla (#seccion) */
   scroll-behavior: smooth;
-
-  /* Deja un margen arriba cuando se hace scroll a una sección,
-     para que la navbar fija no tape el título de esa sección */
   scroll-padding-top: 84px;
 }
-
 body {
-  background: var(--bg); /* aplica fondo oscuro general */
-  color: var(--text); /* texto claro */
-  -webkit-font-smoothing: antialiased; /* mejora la nitidez de tipografías en WebKit */
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* =========================================================
-   NAVBAR (barra superior)
-========================================================= */
-.navbar {
-  /* Fondo oscuro semi-transparente (para ver un poquito el fondo al hacer scroll) */
-  background: rgba(11, 13, 17, 0.85) !important;
+/* Tipografía semántica */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 800;
+  line-height: var(--lh-tight);
+  margin: 0 0 var(--space-4);
+}
+h1 {
+  font-size: var(--fs-h1);
+}
+h2 {
+  font-size: var(--fs-h2);
+}
+h3 {
+  font-size: var(--fs-h3);
+}
+p {
+  margin: 0 0 var(--space-4);
+}
+small,
+.text-muted {
+  color: var(--muted) !important;
+}
 
-  /* Efecto “vidrio esmerilado” sobre lo que hay detrás */
+a {
+  color: var(--brand2);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+section {
+  scroll-margin-top: 84px;
+}
+
+/* Helpers */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.flow > * + * {
+  margin-top: var(--space-4);
+}
+.rounded-4 {
+  border-radius: var(--radius) !important;
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =============================== NAVBAR ================================== */
+.navbar {
+  background: rgba(11, 13, 17, 0.85) !important;
   backdrop-filter: blur(8px);
 }
-
-.navbar.scrolled {
-  /* Cuando bajás, le ponemos sombra para separar visualmente del contenido */
+.navbar.scrolled,
+#nav.scrolled {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
-
 .nav-link.active {
-  /* Resalta el enlace del menú que está activo (sección visible) en cian */
   color: var(--brand2) !important;
 }
 
-/* =========================================================
-   BARRA DE PROGRESO DE SCROLL (arriba de todo)
-   - Es una línea finita que se llena según cuánto scrolleaste.
-   - El JS cambia su width del 0% al 100%.
-========================================================= */
+/* =========================== PROGRESO SUPERIOR =========================== */
 .progress-top {
-  position: fixed; /* fija arriba de todo aunque hagas scroll */
+  position: fixed;
   top: 0;
   left: 0;
-  height: 4px; /* grosor de la línea */
-  width: 0; /* arranca vacía */
-  background: linear-gradient(
-    90deg,
-    var(--brand),
-    var(--brand2)
-  ); /* violeta → cian */
-  z-index: 1500; /* bien por encima del contenido */
+  height: 4px;
+  width: 0;
+  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  z-index: 1500;
 }
 
-/* =========================================================
-   PRELOADER (pantalla de “Cargando…” breve)
-   - Cubre la pantalla al principio y luego desaparece con un fade.
-========================================================= */
+/* ================================ SPLASH ================================= */
 #pre {
-  position: fixed; /* ocupa toda la pantalla */
-  inset: 0; /* top/right/bottom/left: 0 (simplificado) */
-  display: grid; /* grid para centrar fácil */
-  place-items: center; /* centra el contenido tanto vertical como horizontal */
-  background: var(--bg2); /* fondo oscuro */
-  z-index: 2000; /* por encima de todo lo demás */
-  transition: opacity 0.5s; /* transición para desvanecer */
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--bg2);
+  z-index: 2000;
+  transition: opacity 0.5s;
+}
+#pre.fade-out,
+#pre.hide {
+  opacity: 0;
+  pointer-events: none;
 }
 
-#pre.fade-out {
-  opacity: 0; /* se desvanece */
-  pointer-events: none; /* deja de bloquear clics */
-}
-
-/* =========================================================
-   HERO (portada principal)
-   - Pantalla completa con tu nombre grande y efectos de fondo.
-========================================================= */
+/* ================================= HERO ================================== */
 header.hero {
-  min-height: 100vh; /* ocupa el alto de la pantalla */
+  min-height: 100vh;
   display: flex;
-  align-items: center; /* centra el contenido verticalmente */
-  justify-content: center; /* centra horizontalmente */
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  position: relative; /* para posicionar cosas dentro (partículas, brillos) */
-  overflow: hidden; /* oculta desbordes de efectos */
-
-  /* Fondos radiales suaves (manchas de color) + color base */
+  position: relative;
+  overflow: hidden;
   background: radial-gradient(
       1200px 700px at 20% 10%,
       #6c5ce725 0%,
@@ -109,65 +190,55 @@ header.hero {
     radial-gradient(900px 600px at 80% 90%, #00d4ff22 0%, transparent 60%),
     var(--bg2);
 }
-
 .hero-inner {
   position: relative;
-  z-index: 1; /* encima de los fondos/partículas */
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px; /* espacio entre elementos (título, pastilla, botones) */
+  gap: 18px;
 }
-
-/* ---------- Título con letras animadas y degradado ---------- */
 .hero-title {
   margin-bottom: 0.25rem;
 }
 
+/* Nombre con “shine” */
 .name-bling {
-  display: inline-flex; /* para separar letra por letra */
-  gap: 0.03em; /* pequeño espacio entre letras */
+  display: inline-flex;
+  gap: 0.03em;
   position: relative;
-  font-weight: 800; /* bien grueso */
-  font-size: clamp(2.6rem, 6vw, 4.2rem); /* tamaño responsivo */
-  letter-spacing: 0.5px; /* leve separación de caracteres */
+  font-weight: 800;
+  font-size: var(--fs-hero);
+  letter-spacing: 0.5px;
 }
-
 .name-bling > span {
-  /* Cada letra es un span animado con degradado en movimiento */
   display: inline-block;
-  transform-origin: bottom; /* pivot de la animación */
-  opacity: 0; /* las letras aparecen con la animación */
+  transform-origin: bottom;
+  opacity: 0;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.25));
   background: linear-gradient(90deg, #8b7cfb, #00d4ff, #8b7cfb);
-  background-size: 200% 100%; /* el degradado “viaja” */
-  -webkit-background-clip: text; /* aplica el degradado solo al texto */
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  /* 1) heroGradient mueve el degradado
-     2) letterIn hace entrar cada letra (y cambia la opacidad a 1) */
   animation: heroGradient 7s linear infinite, letterIn 0.7s ease forwards;
 }
-
-/* Brillo que cruza el nombre (una banda clara que pasa de izq. a der.) */
 .name-bling .shine {
   position: absolute;
-  inset: 0 auto 0 -20%; /* empieza fuera a la izquierda */
+  inset: 0 auto 0 -20%;
   width: 30%;
-  transform: skewX(-20deg); /* diagonal leve */
+  transform: skewX(-20deg);
   background: linear-gradient(
     90deg,
     transparent,
     rgba(255, 255, 255, 0.35),
     transparent
   );
-  filter: blur(4px); /* lo suaviza para que parezca brillo */
-  pointer-events: none; /* no tapa clics */
-  animation: shineSweep 3.8s ease-in-out 1.2s infinite; /* pase continuo */
+  filter: blur(4px);
+  pointer-events: none;
+  animation: shineSweep 3.8s ease-in-out 1.2s infinite;
 }
-
-/* Stagger: cada letra arranca un poquito después para efecto “ola” */
+/* escalonado (soporta nombres largos) */
 .name-bling > span:nth-child(1) {
   animation-delay: 0.04s;
 }
@@ -207,8 +278,13 @@ header.hero {
 .name-bling > span:nth-child(13) {
   animation-delay: 0.52s;
 }
+.name-bling > span:nth-child(14) {
+  animation-delay: 0.56s;
+}
+.name-bling > span:nth-child(15) {
+  animation-delay: 0.6s;
+}
 
-/* Animaciones del degradado, entrada de letras y barrido del brillo */
 @keyframes heroGradient {
   0% {
     background-position: 0 0;
@@ -236,89 +312,78 @@ header.hero {
   }
 }
 
-/* ---------- Pastilla con rotador de palabras (Developer/Frontend/etc.) ---------- */
-.typing-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px; /* forma de píldora */
-  background: #101522; /* fondo oscuro azulado */
-  border: 1px solid #ffffff22; /* borde suave */
-  color: #cfd7ff; /* texto celeste grisáceo */
-  font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28); /* sombrita linda */
+/* Píldoras (Sistemas / Integraciones / Datos) */
+.btn-dark.rounded-pill {
+  background: #101522;
+  border: 1px solid #ffffff22;
+  color: #cfd7ff;
+  box-shadow: var(--shadow-md);
+  font-weight: 700;
 }
-.typing-pill .word {
-  display: inline-block;
-  width: 12ch; /* ancho fijo para evitar “saltitos” cuando cambia la palabra */
-  text-align: left;
-}
-.typing-pill i {
-  color: #7b88ff; /* icono rayito en violeta */
+.btn-dark.rounded-pill:hover {
+  filter: brightness(1.08);
 }
 
-/* ---------- Botones del hero ---------- */
+/* CTA + ripple */
 .hero-cta {
   display: flex;
   gap: 0.6rem;
   justify-content: center;
 }
-
 .btn-brand {
-  background: var(--brand); /* violeta */
+  background: var(--brand);
   color: #fff;
   border: 0;
 }
 .btn-brand:hover {
-  filter: brightness(1.08); /* se ilumina un toque al pasar el mouse */
+  filter: brightness(1.08);
+}
+.btn-outline-light {
+  border-color: #ffffff3a !important;
+}
+.btn-outline-light:hover {
+  background: #ffffff12;
 }
 
-/* Efecto ripple (onda) al presionar botones con .btn-ripple */
 .btn-ripple {
   position: relative;
-  overflow: hidden; /* oculta la onda fuera del botón */
+  overflow: hidden;
 }
 .btn-ripple::after {
   content: "";
   position: absolute;
   width: 10px;
   height: 10px;
-  background: #fff3; /* blanco muy transparente */
+  background: #fff3;
   border-radius: 50%;
-  transform: scale(0); /* arranca chiquita */
+  transform: scale(0);
   opacity: 0;
   pointer-events: none;
   transition: transform 0.6s, opacity 0.8s;
-  left: var(--x, 50%); /* el JS pone el punto de inicio del ripple */
+  left: var(--x, 50%);
   top: var(--y, 50%);
 }
 .btn-ripple:active::after {
-  transform: scale(18); /* se agranda rápido */
+  transform: scale(18);
   opacity: 1;
 }
 
-/* ---------- Partículas (puntitos) que flotan en el fondo del hero ---------- */
+/* Partículas decorativas */
 .sparks {
   position: absolute;
   inset: 0;
-  pointer-events: none; /* no tapa clics */
-  z-index: 0; /* por detrás del contenido */
+  pointer-events: none;
+  z-index: 0;
 }
 .sparks span {
   position: absolute;
   width: 8px;
   height: 8px;
-  border-radius: 50%; /* circulito */
-  background: radial-gradient(
-    circle,
-    #8b7cfb,
-    transparent 60%
-  ); /* violeta difuso */
+  border-radius: 50%;
+  background: radial-gradient(circle, #8b7cfb, transparent 60%);
   opacity: 0.35;
-  animation: floatUp 8s linear infinite; /* sube y se desvanece en loop */
+  animation: floatUp 8s linear infinite;
 }
-/* Posiciones y delays distintos para que no se muevan todas igual */
 .sparks span:nth-child(1) {
   left: 10%;
   bottom: 15%;
@@ -344,7 +409,6 @@ header.hero {
   bottom: 9%;
   animation-delay: 4s;
 }
-
 @keyframes floatUp {
   0% {
     transform: translateY(0) scale(0.6);
@@ -359,59 +423,82 @@ header.hero {
   }
 }
 
-/* =========================================================
-   SECCIONES / TIPOGRAFÍAS GENERALES
-========================================================= */
-section {
-  scroll-margin-top: 84px; /* cuando saltás a #seccion, deja 84px libres arriba */
-}
-
-.text-muted {
-  color: var(--muted) !important; /* gris suave para textos secundarios */
-}
-
+/* =============================== SECCIONES =============================== */
 .bg-light {
-  /* Cuando una sección usa fondo claro (Bootstrap),
-     ponemos el texto oscuro para mejor contraste */
   color: #0f1115 !important;
 }
 .bg-light .text-muted {
-  color: #5f6470 !important; /* gris más oscuro sobre fondo claro */
+  color: #5f6470 !important;
+}
+.text-center .lead {
+  max-width: 720px;
+  margin-inline: auto;
 }
 
-/* =========================================================
-   HABILIDADES (tarjetas y barras de progreso)
-========================================================= */
+/* ============================== CÓMO TRABAJO ============================= */
+article[data-step],
+[data-animate="elevate"],
+[data-faq] {
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Stepper (lista numerada premium) */
+.step-list {
+  counter-reset: step;
+}
+.step-list > li {
+  position: relative;
+  list-style: none;
+  padding-left: 56px;
+  margin-bottom: var(--space-7);
+}
+.step-list > li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-weight: 800;
+  background: linear-gradient(180deg, #101525, #0c111a);
+  color: #dfe8ff;
+  border: 1px solid #ffffff1a;
+  box-shadow: var(--shadow-sm);
+}
+
+/* =============================== HABILIDADES ============================= */
 .skill-card {
-  background: #fff; /* tarjetas claras */
-  color: #0f1115; /* texto oscuro */
-  border: 1px solid #e8eaf1; /* borde suave */
-  border-radius: 16px; /* esquinas redondeadas */
+  background: #fff;
+  color: #0f1115;
+  border: 1px solid #e8eaf1;
+  border-radius: 16px;
   padding: 16px 18px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08); /* sombra leve */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 .skill-card:hover {
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12); /* sombra un poco más fuerte al pasar el mouse */
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
 }
 .skill-card p {
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
-/* Barra “vacía” */
 .progress {
   background: #eaecef;
   height: 12px;
-  border-radius: 999px; /* pastilla */
+  border-radius: 999px;
   overflow: hidden;
 }
-
-/* Barra “llena” (el JS la va aumentando del 0% al target%) */
 .progress-bar {
-  transition: width 0.25s ease; /* animación suave al crecer */
+  transition: width 0.25s ease;
 }
-
-/* Efecto de rayitas cuando se está llenando (clase se agrega por JS) */
 .progress-bar.is-animating {
   background-image: linear-gradient(
     45deg,
@@ -426,40 +513,30 @@ section {
   background-size: 1rem 1rem;
   animation: moveStripes 0.7s linear infinite;
 }
-
 @keyframes moveStripes {
   to {
     background-position: 1rem 0;
-  } /* corre las rayas hacia la derecha */
+  }
 }
 
-/* =========================================================
-   SERVICIOS (tarjetas con glow suave)
-========================================================= */
+/* ================================ SERVICIOS ============================== */
 #servicios {
-  background: #0d1118; /* fondo un poco más azulado */
+  background: #0d1118;
 }
-
 .service-card {
   position: relative;
   border: 1px solid #1a2230;
-  border-radius: 18px;
+  border-radius: var(--radius);
   padding: 26px 20px;
-  background: linear-gradient(
-    180deg,
-    #101525 0%,
-    #0c111a 100%
-  ); /* degrade oscuro */
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(180deg, #101525 0%, #0c111a 100%);
+  box-shadow: var(--shadow-lg);
   transition: box-shadow 0.25s ease, transform 0.08s linear, border-color 0.25s;
   overflow: hidden;
 }
-
-/* Halo de luz que aparece desde abajo al hacer hover */
 .service-card::after {
   content: "";
   position: absolute;
-  inset: auto -30% -60% -30%; /* centrado, sobresale a los costados */
+  inset: auto -30% -60% -30%;
   height: 120px;
   background: radial-gradient(
     120px 60px at 50% 50%,
@@ -471,29 +548,24 @@ section {
   pointer-events: none;
   transition: opacity 0.35s, transform 0.35s;
 }
-
 .service-card:hover {
-  border-color: #2a3750;
-  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.35);
+  border-color: var(--ring);
+  box-shadow: var(--shadow-xl);
 }
 .service-card:hover::after {
   opacity: 1;
-  transform: translateY(0); /* sube el glow */
+  transform: translateY(0);
 }
-
-/* Iconos grandes en cada tarjeta */
 .svc-icon {
   font-size: 2.6rem;
   margin-bottom: 0.6rem;
   filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
-  transition: transform 0.25s ease, text-shadow 0.25s;
+  transition: transform 0.25s, text-shadow 0.25s;
 }
 .service-card:hover .svc-icon {
   transform: translateY(-2px) scale(1.05);
-  text-shadow: 0 0 18px #7b88ff33; /* leve resplandor */
+  text-shadow: 0 0 18px #7b88ff33;
 }
-
-/* Colores de íconos (simplemente decorativo) */
 .svc-blue {
   color: #3c7bff;
 }
@@ -504,46 +576,37 @@ section {
   color: #e24b5a;
 }
 
-/* =========================================================
-   PROYECTOS (tarjetas con efecto 3D “tilt”)
-========================================================= */
+/* ================================ TARJETAS =============================== */
 .card {
-  background: #131722; /* tarjetas oscuras */
+  background: #131722;
   color: var(--text);
-  border: 1px solid #ffffff12; /* borde muy sutil */
+  border: 1px solid #ffffff12;
 }
 .bg-light .card {
-  /* Si la sección tiene fondo claro, adaptamos la tarjeta a claro */
   background: #fff;
   color: #0f1115;
   border-color: #e5e7eb;
 }
-
 .tilt {
-  transform-style: preserve-3d; /* prepara para el efecto 3D */
+  transform-style: preserve-3d;
   transition: transform 0.08s linear;
 }
 .tilt .card-title {
-  transform: translateZ(16px); /* el título se “eleva” un poco en 3D */
+  transform: translateZ(16px);
 }
 .tilt:hover {
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35); /* sombra más marcada en hover */
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
 }
 
-/* =========================================================
-   TECNOLOGÍAS (grilla de logos)
-========================================================= */
+/* ============================== TECNOLOGÍAS ============================== */
 #tecnologias {
-  background: #11141a; /* diferenciado del resto */
+  background: #11141a;
 }
-
 .tech-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
+  grid-template-columns: repeat(2, 1fr);
   gap: 28px;
 }
-
-/* Aumentamos columnas según tamaño de pantalla */
 @media (min-width: 576px) {
   .tech-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -554,7 +617,6 @@ section {
     grid-template-columns: repeat(6, 1fr);
   }
 }
-
 .tech-item {
   display: flex;
   flex-direction: column;
@@ -567,32 +629,74 @@ section {
   transition: transform 0.15s ease, box-shadow 0.25s ease,
     border-color 0.25s ease;
 }
-
 .tech-item i {
-  font-size: 42px; /* tamaño del logo */
+  font-size: 42px;
   opacity: 0.9;
 }
 .tech-item span {
   color: #bfc7dc;
   font-weight: 600;
 }
-
 .tech-item:hover {
-  transform: translateY(-3px); /* sube un poquito */
-  border-color: #2a3750;
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px #2a375044 inset; /* brillo leve interior */
+  transform: translateY(-3px);
+  border-color: var(--ring);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px #2a375044 inset;
+}
+/* details/summary “ver más” */
+.tech-item summary {
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.tech-item summary::-webkit-details-marker {
+  display: none;
+}
+.tech-item summary::after {
+  content: "▸";
+  margin-left: 0.4rem;
+  opacity: 0.8;
+}
+.tech-item details[open] summary::after {
+  content: "▾";
 }
 
-/* =========================================================
-   CONTACTO (sección con glass + botón neón)
-========================================================= */
+/* ================================== FAQs ================================= */
+#faqs .card {
+  background: linear-gradient(180deg, #0f1522, #0c121b);
+  color: var(--text);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg);
+}
+#faqs .card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #dfe6f2;
+  font-weight: 700;
+  background: transparent;
+}
+#faqs summary {
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+#faqs summary::-webkit-details-marker {
+  display: none;
+}
+#faqs summary::after {
+  content: "▸";
+  margin-left: 0.4rem;
+  opacity: 0.8;
+}
+#faqs details[open] summary::after {
+  content: "▾";
+}
+
+/* ================================ CONTACTO =============================== */
 #contacto {
   background: #0c1016;
   position: relative;
-  overflow: hidden; /* oculta el glow de fondo que se salga */
+  overflow: hidden;
 }
-
-/* Glow suave de fondo (gran mancha verde difusa) */
 #contacto::before {
   content: "";
   position: absolute;
@@ -604,140 +708,303 @@ section {
   filter: blur(6px);
   pointer-events: none;
 }
-
-/* Layout de dos columnas en escritorio (arriba una sola en mobile) */
 .contact-wrap {
   display: grid;
   gap: 24px;
 }
 @media (min-width: 992px) {
   .contact-wrap {
-    grid-template-columns: 1.1fr 1.3fr; /* izquierda un poco más angosta */
+    grid-template-columns: 1.1fr 1.3fr;
   }
 }
-
-/* Tarjeta de la izquierda con info de contacto */
 .contact-left {
   border: 1px solid #1a2230;
-  border-radius: 18px;
+  border-radius: var(--radius);
   padding: 28px;
-  background: linear-gradient(180deg, #0f1724 0%, #0a1018 100%);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+  box-shadow: var(--shadow-lg);
 }
-
-/* Títulos y subtítulos dentro de contacto */
 .contact-title {
   font-size: clamp(1.6rem, 3.2vw, 2.1rem);
   font-weight: 800;
   line-height: 1.18;
-  color: #93ffd9; /* verde agua */
+  color: #93ffd9;
 }
 .contact-sub {
   color: #7ef0c3;
   font-weight: 700;
   margin-top: 8px;
 }
-
-/* Listita de formas de contactarte */
 .contact-bullets {
   margin-top: 18px;
   color: #cfeee4;
 }
 .contact-bullets a {
-  color: #93ffd9; /* links en verde agua */
+  color: #93ffd9;
   text-decoration: none;
 }
 .contact-bullets a:hover {
   text-decoration: underline;
 }
 
-/* ---------- Inputs “glass” (transparentosos) ---------- */
+/* Inputs “glass” + estados */
 .glass {
-  background: rgba(255, 255, 255, 0.02); /* casi transparente */
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid #1a2230;
-  color: #e9f3ff; /* texto claro */
+  color: #e9f3ff;
   border-radius: 14px;
   padding: 12px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 .glass::placeholder {
-  color: #8da0b5; /* placeholder más apagado */
+  color: #8da0b5;
 }
 .glass:focus {
   outline: none;
-  border-color: #2a3750; /* cambia borde al enfocar */
-  box-shadow: 0 0 0 2px #2a375022; /* “aura” leve */
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px #2a375022;
+}
+.is-valid .glass {
+  border-color: #2ecc71;
+}
+.is-invalid .glass {
+  border-color: #e24b5a;
 }
 
-/* Botón verde neón para enviar el formulario */
 .btn-neon {
   background: var(--neon);
-  color: #0b0f14; /* texto oscuro para contrastar con verde brillante */
+  color: #0b0f14;
   border: none;
   font-weight: 800;
   border-radius: 14px;
   padding: 12px 18px;
-  box-shadow: 0 10px 30px #27ef9f44; /* glow verde */
+  box-shadow: 0 10px 30px #27ef9f44;
 }
 .btn-neon:hover {
   filter: brightness(1.05);
-} /* un toque más brillante */
+}
 .btn-neon:active {
   transform: translateY(1px);
-} /* feedback al hacer click */
+}
 
-/* =========================================================
-   BOTÓN FLOTANTE DE WHATSAPP (abajo a la derecha)
-========================================================= */
+/* ============================ WHATSAPP FAB =============================== */
 .wsp-fab {
   position: fixed;
   right: 18px;
   bottom: 18px;
-  z-index: 1200; /* por encima del contenido */
+  z-index: 1200;
   width: 56px;
   height: 56px;
   display: grid;
-  place-items: center; /* centra el icono */
-  background: #25d366; /* verde WhatsApp */
+  place-items: center;
+  background: #25d366;
   color: #0b0f14;
-  border-radius: 999px; /* círculo */
-  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.35),
-    /* sombra verde hacia abajo */ 0 0 0 2px #0b0f14 inset; /* aro oscuro interno */
+  border-radius: 999px;
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.35), 0 0 0 2px #0b0f14 inset;
   transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
-
 .wsp-fab:hover {
-  transform: translateY(-2px); /* sube un pelín */
-  box-shadow: 0 16px 38px rgba(37, 211, 102, 0.45); /* sombra más marcada */
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(37, 211, 102, 0.45);
 }
-
 .wsp-fab i {
-  font-size: 24px; /* tamaño del ícono */
+  font-size: 24px;
 }
-
-/* Globito con texto que aparece al pasar el mouse */
 .wsp-fab .tip {
   position: absolute;
-  right: 64px; /* sale hacia la izquierda del botón */
+  right: 64px;
   bottom: 50%;
-  transform: translateY(50%); /* centro verticalmente respecto del botón */
+  transform: translateY(50%);
   background: #101522;
   color: #cfe7ff;
   font-size: 0.85rem;
   padding: 6px 10px;
-  border: 1px solid #2a3750;
+  border: 1px solid var(--ring);
   border-radius: 8px;
-  white-space: nowrap; /* que no se corte en varias líneas */
-  opacity: 0; /* oculto por defecto */
-  pointer-events: none; /* no interfiere con el mouse */
-  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
 }
 .wsp-fab:hover .tip {
-  opacity: 1; /* aparece el cartelito */
+  opacity: 1;
 }
 
-/* =========================================================
-   FOOTER (pie de página)
-========================================================= */
+/* ================================= FOOTER ================================ */
 footer {
-  background: #0a0c10; /* más oscuro que el body para diferenciar */
+  background: #0a0c10;
+}
+
+/* ============================ COMPONENTES PRO ============================ */
+/* Chips (útiles para etiquetas de módulos, integraciones, etc.) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: #101522;
+  color: #cfd7ff;
+  border: 1px solid #ffffff22;
+  font-weight: 600;
+}
+.chip-ghost {
+  background: transparent;
+  border: 1px dashed #2a3750;
+  color: #9fb4ff;
+}
+
+/* Callouts (info/tips/avisos) */
+.callout {
+  border-radius: var(--r-3);
+  border: 1px solid #ffffff14;
+  background: linear-gradient(180deg, #101525, #0c111a);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+.callout.success {
+  border-color: #2ecc71;
+  box-shadow: 0 10px 28px rgba(46, 204, 113, 0.15);
+}
+.callout.warn {
+  border-color: #f1c40f;
+  box-shadow: 0 10px 28px rgba(241, 196, 15, 0.15);
+}
+.callout.info {
+  border-color: #3498db;
+  box-shadow: 0 10px 28px rgba(52, 152, 219, 0.15);
+}
+
+/* Divisor suave */
+.divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, #ffffff1a, transparent);
+  margin: var(--space-7) 0;
+}
+
+/* Skeletons (carga percibida, sin JS) */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #161b27;
+  border-radius: 8px;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #ffffff12 40%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  animation: skeleton 1.2s ease-in-out infinite;
+}
+@keyframes skeleton {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ============================= ACCESIBILIDAD ============================= */
+:focus-visible {
+  outline: 2px dashed var(--neon);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ================================= PRINT ================================ */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  header.hero,
+  .progress-top,
+  .wsp-fab,
+  nav,
+  footer {
+    display: none !important;
+  }
+  a {
+    text-decoration: underline;
+  }
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.9em;
+  }
+}
+
+/* ============================= MODO CLARO (opt) ===========================
+   Para activarlo en algún momento, agregá en el <body>:
+   data-theme="light"
+   (No requiere JS; queda listo para usar.)<!-- test cambio -->
+
+--------------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  --bg: #f7f9fc;
+  --bg2: #f2f5fa;
+  --surface: #ffffff;
+  --surface-2: #f7f9fc;
+  --text: #101318;
+  --muted: #5c6678;
+  --ring: #d7deea;
+}
+:root[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+:root[data-theme="light"] .navbar {
+  background: #ffffffd9 !important;
+  backdrop-filter: saturate(120%) blur(8px);
+}
+:root[data-theme="light"] .progress-top {
+  background: linear-gradient(90deg, #6c5ce7, #00a8ff);
+}
+:root[data-theme="light"] header.hero {
+  background: radial-gradient(
+      1200px 700px at 20% 10%,
+      #6c5ce71a 0%,
+      transparent 60%
+    ),
+    radial-gradient(900px 600px at 80% 90%, #00a8ff1a 0%, transparent 60%),
+    var(--bg2);
+}
+:root[data-theme="light"] .card {
+  background: #fff;
+  color: #101318;
+  border-color: #e6ebf4;
+}
+:root[data-theme="light"] #servicios {
+  background: #eef2f9;
+}
+:root[data-theme="light"] #tecnologias {
+  background: #f2f5fb;
+}
+:root[data-theme="light"] #faqs .card {
+  background: linear-gradient(180deg, #ffffff, #f6f9ff);
+  color: #101318;
+  border-color: #e6ebf4;
+}
+:root[data-theme="light"] .contact-left {
+  background: linear-gradient(180deg, #ffffff, #f6f9ff);
+  border-color: #e6ebf4;
+}
+:root[data-theme="light"] .glass {
+  background: #fffffff2;
+  color: #101318;
+  border-color: #e6ebf4;
+}
+:root[data-theme="light"] .wsp-fab {
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.25), 0 0 0 2px #ffffff inset;
 }
