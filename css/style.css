@@ -1,5 +1,13 @@
 /* ==========================================================================
-   PORTAFOLIO — CSS PRO PACK (RESPONSIVO AJUSTADO, FINAL)
+   PORTAFOLIO — CSS PRO PACK (RESPONSIVO AJUSTADO, FINAL+)
+   - Fixes móviles chicos (iPhone 7/8/SE)
+   - Tipografías fluidas conservadoras (clamp)
+   - Hero 100dvh estable + pills 1→2→3
+   - CTA full-width en móvil + microcopy legible
+   - Navbar toggler con más aire
+   - FAB WhatsApp con safe-area
+   - Fondo del hero con glow animado sutil (sin JS)
+   - HOTFIX: shine del título sin recortes en iOS/Android
    -------------------------------------------------------------------------- */
 
 /* =============================== TOKENS ================================== */
@@ -53,6 +61,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 84px;
+  -webkit-text-size-adjust: 100%; /* evita zoom raro en iOS */
 }
 body {
   background: var(--bg);
@@ -229,9 +238,10 @@ header.hero::before {
   display: inline-flex;
   gap: 0.03em;
   position: relative;
+  overflow: visible; /* HOTFIX */
   font-weight: 800;
   font-size: var(--fs-hero);
-  letter-spacing: 0.3px; /* menos separación para que no se “rompa” en mobile */
+  letter-spacing: 0.3px;
 }
 .name-bling > span {
   display: inline-block;
@@ -245,10 +255,12 @@ header.hero::before {
   -webkit-text-fill-color: transparent;
   animation: heroGradient 7s linear infinite, letterIn 0.7s ease forwards;
 }
+/* brillo que cruza TODO el título sin dejar banda */
 .name-bling .shine {
   position: absolute;
-  inset: 0;
-  width: 18%; /* más angosto, no deja banda */
+  inset: -4% -40%; /* HOTFIX: margen extra, no se corta */
+  width: auto;
+  height: 100%;
   transform: skewX(-18deg) translateX(-22%);
   background: linear-gradient(
     90deg,
@@ -257,8 +269,9 @@ header.hero::before {
     transparent
   );
   filter: blur(6px);
-  mix-blend-mode: screen; /* se funde con el texto, no “ensucia” el fondo */
+  mix-blend-mode: screen;
   pointer-events: none;
+  z-index: 0;
   -webkit-mask: linear-gradient(
     90deg,
     transparent 0%,
@@ -354,7 +367,7 @@ header.hero::before {
 .hero-lead {
   font-size: clamp(1rem, 2.1vw, 1.22rem);
   line-height: 1.5;
-  max-width: min(60ch, 92%); /* desktop 60ch, mobile limita por % */
+  max-width: min(60ch, 92%);
   margin-inline: auto;
   text-wrap: balance;
 }
@@ -1114,4 +1127,59 @@ footer {
 }
 :root[data-theme="light"] .wsp-fab {
   box-shadow: 0 12px 30px rgba(37, 211, 102, 0.25), 0 0 0 2px #ffffff inset;
+}
+
+/* ===== COMPACT MODE (iPhone 7/8/SE y pantallas bajas) ===== */
+:root.compact {
+  --fs-hero: clamp(1.7rem, 8vw, 2.6rem);
+  --fs-h1: clamp(1.4rem, 5.2vw, 2rem);
+  --lh-cozy: 1.28;
+}
+/* Hero más compacto */
+.compact header.hero {
+  min-height: calc(96dvh - var(--header-height));
+}
+.compact .hero-inner {
+  gap: 10px;
+  padding-top: 4px;
+}
+.compact .hero-title {
+  letter-spacing: 0.2px;
+}
+/* Texto principal más corto y legible */
+.compact .hero .lead,
+.compact .hero-lead {
+  font-size: clamp(0.95rem, 3.6vw, 1.05rem);
+  line-height: 1.35;
+  max-width: 32ch;
+}
+/* Pills y CTA más chicas, con menos separación */
+.compact .hero-pills {
+  gap: 10px;
+}
+.compact .hero-pills .btn {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.compact .hero-cta .btn {
+  padding: 10px 16px;
+  font-size: 1rem;
+}
+/* Microcopy con menos alto, para que no choque con el FAB */
+.compact .hero small {
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+/* FAB un poco más arriba en pantallas cortas */
+.compact .wsp-fab {
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+/* Navbar con tipografía algo menor y más aire al toggler */
+.compact .navbar .navbar-brand {
+  font-size: 1.05rem;
+}
+.compact .navbar .navbar-toggler {
+  margin-right: 14px;
 }
