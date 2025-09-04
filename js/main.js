@@ -1,63 +1,108 @@
 /* ================================================
-   main.js — Portfolio Alvaro
-   - Detecta entorno y fija API_BASE
-   - Animaciones/AOS, preloader, barra de progreso
-   - Envío del formulario a /api/contact
-   - Efecto tilt y ripple
+   main.js — Portfolio Alvaro (Revisado y robusto)
+   - Entorno/API_BASE inteligente
+   - AOS con prefers-reduced-motion
+   - Preloader
+   - Barra de progreso + navbar .scrolled (rAF throttle)
+   - Rotador opcional (#rotator .word)
+   - Ripple en botones (pointer + touch)
+   - Habilidades con IntersectionObserver (fallback)
+   - Formulario: validación, honeypot y POST a /api/contact
+   - Efecto tilt con rAF y reduce-motion
+   - Auto-cerrar menú móvil y ScrollSpy Bootstrap
 ================================================ */
 
-// ---------- Entorno (DEV vs PROD) ----------
+/* ------------------------ Entorno (DEV vs PROD) ------------------------- */
 const isLiveServer =
-  location.host.startsWith("127.0.0.1:5500") ||
-  location.host.startsWith("localhost:5500");
+  location.host === "127.0.0.1:5500" || location.host === "localhost:5500"; // Live Server típico
 
 const isProd =
   location.hostname.endsWith("github.io") ||
-  location.hostname.endsWith("tudominio.com"); // si después usás tu dominio
+  location.hostname.endsWith("tudominio.com"); // cambiá cuando tengas dominio
 
-// En local (Live Server) forzamos 127.0.0.1:4000 para evitar problemas entre 127.0.0.1 y localhost
 const API_BASE = isLiveServer
   ? "http://127.0.0.1:4000"
   : isProd
-  ? "https://TU-BACKEND.onrender.com" // <-- cuando publiques el backend, cambiá esto UNA sola vez
+  ? "https://TU-BACKEND.onrender.com" // <-- cambia acá UNA sola vez en prod
   : "http://127.0.0.1:4000";
 
-console.log("main.js cargado ✅  |  API_BASE:", API_BASE);
+console.log("main.js ✅ | API_BASE:", API_BASE);
 
-/* ================================================
-   AOS (si está cargado por CDN)
-================================================ */
+/* ---------------------------- Utilidades base --------------------------- */
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
+const prefersReduce =
+  window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+
+/* ================================ AOS =================================== */
 if (window.AOS && typeof AOS.init === "function") {
-  AOS.init({ once: true, duration: 700 });
+  AOS.init({
+    once: true,
+    duration: 700,
+    easing: "ease-out",
+    offset: 60,
+    disable: () => prefersReduce, // respeta reduce-motion
+  });
 }
 
-/* ================================================
-   Preloader
-================================================ */
+/* ============================== Preloader =============================== */
 window.addEventListener("load", () => {
   const pre = document.getElementById("pre");
-  if (pre) {
+  if (!pre) return;
+
+  // ⏱ Mantener splash visible al menos 10 segundos
+  const MIN_TIME = 10000;
+
+  setTimeout(() => {
     pre.classList.add("fade-out");
-    setTimeout(() => pre.remove(), 500);
-  }
+    setTimeout(() => pre.remove(), 700); // animación extra de fade
+  }, MIN_TIME);
 });
 
-/* ================================================
-   Barra de progreso + navbar scrolled
-================================================ */
-const bar = document.getElementById("bar");
-const nav = document.getElementById("nav");
-window.addEventListener("scroll", () => {
+/* =================== Barra de progreso + navbar scrolled ================= */
+const bar = $("#bar");
+const nav = $("#nav");
+
+const updateProgressAndNav = () => {
   const h = document.documentElement;
   const sc = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
   if (bar) bar.style.width = sc + "%";
   if (nav) nav.classList.toggle("scrolled", window.scrollY > 10);
-});
+};
 
-/* ================================================
-   Rotador de palabras
-================================================ */
+// Throttle con rAF
+let ticking = false;
+const onScroll = () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      updateProgressAndNav();
+      ticking = false;
+    });
+    ticking = true;
+  }
+};
+window.addEventListener("scroll", onScroll, { passive: true });
+window.addEventListener(
+  "resize",
+  () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateProgressAndNav();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  },
+  { passive: true }
+);
+
+/* =========================== Rotador de palabras =========================
+   (Seguro: sólo corre si existe #rotator .word; tu HTML actual puede no usarlo)
+--------------------------------------------------------------------------- */
 (() => {
+  const el = document.querySelector("#rotator .word");
+  if (!el) return;
   const words = [
     "Developer",
     "Frontend",
@@ -66,11 +111,8 @@ window.addEventListener("scroll", () => {
     "Frontend",
     "Backend",
   ];
-  const el = document.querySelector("#rotator .word");
-  if (!el) return;
   let i = 0;
   const swap = () => {
-    i = (i + 1) % words.length;
     el.animate(
       [
         { opacity: 1, transform: "translateY(0)" },
@@ -78,6 +120,7 @@ window.addEventListener("scroll", () => {
       ],
       { duration: 180, fill: "forwards" }
     ).finished.then(() => {
+      i = (i + 1) % words.length;
       el.textContent = words[i];
       el.animate(
         [
@@ -88,71 +131,95 @@ window.addEventListener("scroll", () => {
       );
     });
   };
-  setInterval(swap, 1800);
+  const id = setInterval(swap, 1800);
+  // Limpieza si cambian de página con PJAX/etc
+  window.addEventListener("beforeunload", () => clearInterval(id));
 })();
 
-/* ================================================
-   Ripple en botones
-================================================ */
-document.querySelectorAll(".btn-ripple").forEach((btn) => {
-  btn.addEventListener("pointerdown", (e) => {
+/* =============================== Ripple ================================= */
+$$(".btn-ripple").forEach((btn) => {
+  const setRipple = (e) => {
     const r = btn.getBoundingClientRect();
-    btn.style.setProperty("--x", e.clientX - r.left + "px");
-    btn.style.setProperty("--y", e.clientY - r.top + "px");
-  });
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    btn.style.setProperty("--x", clientX - r.left + "px");
+    btn.style.setProperty("--y", clientY - r.top + "px");
+  };
+  btn.addEventListener("pointerdown", setRipple, { passive: true });
+  // Fallbacks por si el UA no mapea pointer events
+  btn.addEventListener("mousedown", setRipple);
+  btn.addEventListener("touchstart", setRipple, { passive: true });
 });
 
-/* ================================================
-   Habilidades: llenar barras
-================================================ */
-const bars = document.querySelectorAll(".progress-bar[data-target]");
-const io = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((e) => {
-      if (!e.isIntersecting) return;
-      const el = e.target;
-      const target = parseInt(el.dataset.target, 10);
-      let n = 0;
-      el.classList.add("is-animating");
-      const step = () => {
-        n += 2;
-        if (n > target) n = target;
-        el.style.width = n + "%";
-        el.textContent = n + "%";
-        if (n < target) requestAnimationFrame(step);
-        else el.classList.remove("is-animating");
-      };
-      requestAnimationFrame(step);
-      io.unobserve(el);
-    });
-  },
-  { threshold: 0.35 }
-);
-bars.forEach((b) => io.observe(b));
-
-/* ================================================
-   Formulario: validación y envío a /api/contact
-================================================ */
+/* ========================== Habilidades (bars) ========================== */
 (() => {
-  const form =
-    document.querySelector("#contact-form") ||
-    document.getElementById("contactForm");
+  const bars = $$(".progress-bar[data-target]");
+  if (!bars.length) return;
+
+  const animateBar = (el) => {
+    const target = clamp(parseInt(el.dataset.target, 10) || 0, 0, 100);
+    let n = 0;
+    el.classList.add("is-animating");
+    const step = () => {
+      n = Math.min(n + 2, target);
+      el.style.width = n + "%";
+      el.textContent = n + "%";
+      if (n < target) requestAnimationFrame(step);
+      else setTimeout(() => el.classList.remove("is-animating"), 300);
+    };
+    requestAnimationFrame(step);
+  };
+
+  if (!("IntersectionObserver" in window) || prefersReduce) {
+    // Fallback o reduce-motion: fijar a target sin animación progresiva
+    bars.forEach((el) => {
+      const target = clamp(parseInt(el.dataset.target, 10) || 0, 0, 100);
+      el.style.width = target + "%";
+      el.textContent = target + "%";
+    });
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          animateBar(e.target);
+          obs.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.35 }
+  );
+
+  bars.forEach((b) => io.observe(b));
+})();
+
+/* ====================== Formulario: validación + POST ==================== */
+(() => {
+  const form = $("#contact-form") || $("#contactForm");
   if (!form) {
     console.warn("No se encontró el formulario (#contact-form / #contactForm)");
     return;
   }
-
-  console.log("Enlazando submit del formulario de contacto ✅");
+  console.log("Form contacto ✅ enlazado");
 
   const getVal = (sel, fallbackSel) => {
-    const a = document.querySelector(sel);
+    const a = $(sel);
     if (a && typeof a.value === "string") return a.value.trim();
-    const b = fallbackSel ? document.querySelector(fallbackSel) : null;
+    const b = fallbackSel ? $(fallbackSel) : null;
     return b && typeof b.value === "string" ? b.value.trim() : "";
   };
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    // Honeypot anti-spam
+    const hp = $("#website");
+    if (hp && hp.value) {
+      console.warn("Honeypot activado. Abortando envío.");
+      return;
+    }
 
     if (!form.checkValidity()) {
       e.stopPropagation();
@@ -164,7 +231,7 @@ bars.forEach((b) => io.observe(b));
     const email = getVal("#email", 'input[name="email"]');
     const telefono = getVal("#telefono", 'input[name="telefono"]');
     const mensaje = getVal("#mensaje", 'textarea[name="mensaje"]');
-    const asunto = getVal('input[name="asunto"]'); // opcional
+    const asunto = getVal("#asunto", 'input[name="asunto"]'); // opcional
 
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) {
@@ -181,15 +248,14 @@ bars.forEach((b) => io.observe(b));
         body: JSON.stringify({ nombre, email, telefono, mensaje, asunto }),
       });
 
-      // Intenta parsear JSON aunque haya error HTTP (para ver mensaje del backend)
       let data = {};
       try {
         data = await resp.json();
-      } catch (_) {}
+      } catch {}
 
       console.log("Respuesta API:", resp.status, data);
 
-      if (resp.ok && data.ok) {
+      if (resp.ok && (data.ok === true || data.status === "ok")) {
         alert("✅ ¡Gracias! Me pongo en contacto pronto.");
         form.reset();
         form.classList.remove("was-validated");
@@ -210,15 +276,75 @@ bars.forEach((b) => io.observe(b));
   });
 })();
 
-/* ================================================
-   Efecto tilt 3D
-================================================ */
-document.querySelectorAll(".tilt").forEach((card) => {
-  card.addEventListener("mousemove", (e) => {
+/* ============================ Efecto tilt 3D ============================= */
+(() => {
+  const cards = $$(".tilt");
+  if (!cards.length) return;
+
+  const applyTilt = (card, e) => {
     const r = card.getBoundingClientRect();
     const x = ((e.clientX - r.left) / r.width - 0.5) * 10;
     const y = ((e.clientY - r.top) / r.height - 0.5) * -10;
     card.style.transform = `perspective(800px) rotateX(${y}deg) rotateY(${x}deg)`;
+  };
+
+  cards.forEach((card) => {
+    if (prefersReduce) return; // respeta reduce-motion
+    let raf = null;
+    const onMove = (e) => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => applyTilt(card, e));
+    };
+    card.addEventListener("mousemove", onMove);
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = "none";
+      if (raf) cancelAnimationFrame(raf);
+      raf = null;
+    });
   });
-  card.addEventListener("mouseleave", () => (card.style.transform = "none"));
-});
+})();
+
+/* ================== Auto-cerrar menú móvil + ScrollSpy =================== */
+(() => {
+  const menu = $("#menu");
+  if (!menu) return;
+
+  // Auto-cerrar al clickear cualquier link del menú
+  $$(".nav-link", menu).forEach((link) => {
+    link.addEventListener("click", () => {
+      const Collapse = window.bootstrap?.Collapse;
+      if (Collapse && menu.classList.contains("show")) {
+        const inst = Collapse.getOrCreateInstance(menu, { toggle: false });
+        inst.hide();
+      }
+    });
+  });
+
+  // ScrollSpy (si Bootstrap está disponible)
+  try {
+    const ScrollSpy = window.bootstrap?.ScrollSpy;
+    if (ScrollSpy) {
+      ScrollSpy.getOrCreateInstance(document.body, {
+        target: "#menu",
+        offset: 80,
+      });
+    }
+  } catch (e) {
+    console.warn("ScrollSpy no disponible:", e);
+  }
+})();
+
+/* ============================== Init inmediato =========================== */
+(() => {
+  // Inicializa estado visual al cargar
+  if (
+    document.readyState === "complete" ||
+    document.readyState === "interactive"
+  ) {
+    requestAnimationFrame(updateProgressAndNav);
+  } else {
+    document.addEventListener("DOMContentLoaded", () =>
+      requestAnimationFrame(updateProgressAndNav)
+    );
+  }
+})();

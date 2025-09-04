@@ -1,14 +1,16 @@
 /* ==========================================================================
-   PORTAFOLIO — CSS PRO PACK (RESPONSIVO AJUSTADO)
+   PORTAFOLIO — CSS PRO PACK (RESPONSIVO AJUSTADO, LISTO PARA COPIAR)
    - Fixes móviles chicos (iPhone 7/8/SE)
-   - Tipografías fluidas con límites sanos
+   - Tipografías fluidas con límites sanos (clamp)
    - Hero 100dvh estable + pills 1→2→3 columnas
+   - CTA full-width en móvil + microcopy legible
+   - Navbar toggler con más aire
    - FAB WhatsApp con safe-area
+   - Fondo del hero con glow animado sutil (sin JS)
    -------------------------------------------------------------------------- */
 
 /* =============================== TOKENS ================================== */
 :root {
-  /* Colores base (dark) */
   --bg: #0f1115;
   --bg2: #0b0d11;
   --surface: #0f1724;
@@ -18,12 +20,10 @@
   --muted: #b9b9b9;
 
   --brand: #6c5ce7; /* violeta (marca) */
-  --brand2: #00d4ff; /* cian (acento) */
-  --neon: #27ef9f; /* verde (cta/contacto) */
+  --brand2: #00d4ff; /* cian (acento)  */
+  --neon: #27ef9f; /* verde (cta)    */
+  --ring: #2a3750; /* borde/enfoque  */
 
-  --ring: #2a3750; /* borde/enfoque */
-
-  /* Escalas */
   --radius: 18px;
   --r-2: 12px;
   --r-3: 18px;
@@ -44,15 +44,17 @@
   --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.3);
   --shadow-xl: 0 22px 70px rgba(0, 0, 0, 0.35);
 
-  /* Tipografía fluida (valores originales; ajustamos por clase más abajo) */
-  --fs-hero: clamp(2.6rem, 6vw, 4.2rem);
-  --fs-h1: clamp(2rem, 3.8vw, 3rem);
-  --fs-h2: clamp(1.6rem, 3vw, 2.2rem);
-  --fs-h3: clamp(1.3rem, 2.2vw, 1.6rem);
+  /* Tipografía fluida base */
+  --fs-hero: clamp(2.2rem, 7vw, 4.2rem);
+  --fs-h1: clamp(1.9rem, 3.8vw, 3rem);
+  --fs-h2: clamp(1.5rem, 3vw, 2.2rem);
+  --fs-h3: clamp(1.25rem, 2.2vw, 1.6rem);
   --fs-body: clamp(1rem, 1.2vw, 1.05rem);
   --lh-tight: 1.15;
   --lh-cozy: 1.35;
   --lh-relaxed: 1.6;
+
+  --header-height: 64px; /* para 100dvh estable */
 }
 
 /* ================================ BASE =================================== */
@@ -68,8 +70,6 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-
-/* Tipografía semántica */
 h1,
 h2,
 h3,
@@ -96,7 +96,6 @@ small,
 .text-muted {
   color: var(--muted) !important;
 }
-
 a {
   color: var(--brand2);
   text-decoration: none;
@@ -104,12 +103,9 @@ a {
 a:hover {
   text-decoration: underline;
 }
-
 section {
   scroll-margin-top: 84px;
 }
-
-/* Helpers */
 .stack {
   display: flex;
   flex-direction: column;
@@ -137,6 +133,10 @@ section {
 .navbar {
   background: rgba(11, 13, 17, 0.85) !important;
   backdrop-filter: blur(8px);
+}
+.navbar .navbar-toggler {
+  margin-right: clamp(8px, 2.5vw, 18px);
+  padding: 8px 12px;
 }
 .navbar.scrolled,
 #nav.scrolled {
@@ -175,8 +175,7 @@ section {
 
 /* ================================= HERO ================================== */
 header.hero {
-  /* FIX: 100dvh estable en móviles (evita “salto” del vh en iOS/Android) */
-  min-height: calc(100dvh - var(--header-height, 64px));
+  min-height: calc(100dvh - var(--header-height));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -191,6 +190,36 @@ header.hero {
     radial-gradient(900px 600px at 80% 90%, #00d4ff22 0%, transparent 60%),
     var(--bg2);
 }
+/* Glow animado sutil */
+header.hero::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  background: radial-gradient(
+      60% 60% at 20% 20%,
+      rgba(108, 92, 231, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      50% 50% at 80% 80%,
+      rgba(0, 212, 255, 0.15),
+      transparent 60%
+    );
+  filter: blur(2px);
+  animation: heroGlow 12s ease-in-out infinite alternate;
+  z-index: 0;
+}
+@keyframes heroGlow {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1.02);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate3d(2%, 1%, 0) scale(1.05);
+    opacity: 0.85;
+  }
+}
+
 .hero-inner {
   position: relative;
   z-index: 1;
@@ -198,7 +227,6 @@ header.hero {
   flex-direction: column;
   align-items: center;
   gap: 18px;
-  /* Contenedor sano en pantallas grandes */
   max-width: 980px;
   margin-inline: auto;
   padding-inline: 16px;
@@ -214,7 +242,6 @@ header.hero {
   gap: 0.03em;
   position: relative;
   font-weight: 800;
-  /* Ajuste: usamos el token, pero lo reducimos en móviles chicos con media */
   font-size: var(--fs-hero);
   letter-spacing: 0.5px;
 }
@@ -245,7 +272,6 @@ header.hero {
   pointer-events: none;
   animation: shineSweep 3.8s ease-in-out 1.2s infinite;
 }
-/* escalonado (soporta nombres largos) */
 .name-bling > span:nth-child(1) {
   animation-delay: 0.04s;
 }
@@ -291,7 +317,6 @@ header.hero {
 .name-bling > span:nth-child(15) {
   animation-delay: 0.6s;
 }
-
 @keyframes heroGradient {
   0% {
     background-position: 0 0;
@@ -319,12 +344,12 @@ header.hero {
   }
 }
 
-/* Lead del hero (nuevo) */
+/* Lead del hero — legible y acotado */
+.hero .lead,
 .hero-lead {
-  /* min 1rem, escala fluida, max 1.25rem */
   font-size: clamp(1rem, 2.2vw, 1.25rem);
   line-height: 1.45;
-  max-width: 36ch;
+  max-width: min(90ch, 92%);
   margin-inline: auto;
 }
 
@@ -332,15 +357,16 @@ header.hero {
 .hero-pills {
   display: grid;
   gap: 12px;
-  grid-template-columns: 1fr; /* iPhone 7/8 */
+  grid-template-columns: 1fr;
   justify-items: center;
   margin-bottom: 1rem;
 }
 .hero-pills .btn {
   width: 100%;
+  margin-bottom: 0.8rem; /* más aire entre pills */
+  font-size: clamp(0.95rem, 2.8vw, 1rem); /* accesible en mobile  */
 }
 @media (min-width: 400px) {
-  /* iPhone 15 / S24 */
   .hero-pills {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -380,7 +406,6 @@ header.hero {
     width: auto;
   }
 }
-
 .btn-brand {
   background: var(--brand);
   color: #fff;
@@ -395,7 +420,6 @@ header.hero {
 .btn-outline-light:hover {
   background: #ffffff12;
 }
-
 .btn-ripple {
   position: relative;
   overflow: hidden;
@@ -417,6 +441,12 @@ header.hero {
 .btn-ripple:active::after {
   transform: scale(18);
   opacity: 1;
+}
+
+/* Micro-confianza bajo el CTA */
+.hero small {
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  opacity: 0.95;
 }
 
 /* Partículas decorativas */
@@ -496,7 +526,7 @@ article[data-step],
   box-shadow: var(--shadow-lg);
 }
 
-/* Stepper (lista numerada premium) */
+/* Stepper */
 .step-list {
   counter-reset: step;
 }
@@ -540,7 +570,6 @@ article[data-step],
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
-
 .progress {
   background: #eaecef;
   height: 12px;
@@ -971,8 +1000,8 @@ footer {
 }
 
 /* ========================== AJUSTES DE BREAKPOINTS ======================= */
-/* Móvil chico (iPhone 7/8/SE) — bajamos tamaño del nombre */
 @media (max-width: 375px) {
+  /* iPhone 7/8/SE 2da gen */
   .name-bling {
     font-size: 1.85rem;
   }
@@ -980,8 +1009,8 @@ footer {
     width: 100%;
   }
 }
-/* Móvil muy chico (SE 1ra gen) */
 @media (max-width: 320px) {
+  /* iPhone SE 1ra gen */
   .name-bling {
     font-size: 1.6rem;
   }
@@ -1010,7 +1039,7 @@ footer {
 }
 
 /* ============================= MODO CLARO (opt) ===========================
-   Para activarlo: <body data-theme="light"> */
+   Activar con: <body data-theme="light"> */
 :root[data-theme="light"] {
   --bg: #f7f9fc;
   --bg2: #f2f5fa;
