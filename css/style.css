@@ -1,9 +1,9 @@
 /* ==========================================================================
-   PORTAFOLIO — CSS PRO PACK
-   - Diseño escalable por tokens
-   - Tipografías fluidas (clamp)
-   - Componentes premium: hero, chips, servicios, pasos, FAQs, contacto
-   - Accesibilidad, skeletons, motion-reduce, print y modo claro opcional
+   PORTAFOLIO — CSS PRO PACK (RESPONSIVO AJUSTADO)
+   - Fixes móviles chicos (iPhone 7/8/SE)
+   - Tipografías fluidas con límites sanos
+   - Hero 100dvh estable + pills 1→2→3 columnas
+   - FAB WhatsApp con safe-area
    -------------------------------------------------------------------------- */
 
 /* =============================== TOKENS ================================== */
@@ -44,7 +44,7 @@
   --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.3);
   --shadow-xl: 0 22px 70px rgba(0, 0, 0, 0.35);
 
-  /* Tipografía fluida */
+  /* Tipografía fluida (valores originales; ajustamos por clase más abajo) */
   --fs-hero: clamp(2.6rem, 6vw, 4.2rem);
   --fs-h1: clamp(2rem, 3.8vw, 3rem);
   --fs-h2: clamp(1.6rem, 3vw, 2.2rem);
@@ -175,7 +175,8 @@ section {
 
 /* ================================= HERO ================================== */
 header.hero {
-  min-height: 100vh;
+  /* FIX: 100dvh estable en móviles (evita “salto” del vh en iOS/Android) */
+  min-height: calc(100dvh - var(--header-height, 64px));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,9 +198,14 @@ header.hero {
   flex-direction: column;
   align-items: center;
   gap: 18px;
+  /* Contenedor sano en pantallas grandes */
+  max-width: 980px;
+  margin-inline: auto;
+  padding-inline: 16px;
 }
 .hero-title {
   margin-bottom: 0.25rem;
+  text-wrap: balance;
 }
 
 /* Nombre con “shine” */
@@ -208,6 +214,7 @@ header.hero {
   gap: 0.03em;
   position: relative;
   font-weight: 800;
+  /* Ajuste: usamos el token, pero lo reducimos en móviles chicos con media */
   font-size: var(--fs-hero);
   letter-spacing: 0.5px;
 }
@@ -312,7 +319,40 @@ header.hero {
   }
 }
 
-/* Píldoras (Sistemas / Integraciones / Datos) */
+/* Lead del hero (nuevo) */
+.hero-lead {
+  /* min 1rem, escala fluida, max 1.25rem */
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  line-height: 1.45;
+  max-width: 36ch;
+  margin-inline: auto;
+}
+
+/* Pills (Sistemas / Integraciones / Datos) — grid 1→2→3 */
+.hero-pills {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr; /* iPhone 7/8 */
+  justify-items: center;
+  margin-bottom: 1rem;
+}
+.hero-pills .btn {
+  width: 100%;
+}
+@media (min-width: 400px) {
+  /* iPhone 15 / S24 */
+  .hero-pills {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 768px) {
+  .hero-pills {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Píldoras estilo */
 .btn-dark.rounded-pill {
   background: #101522;
   border: 1px solid #ffffff22;
@@ -324,12 +364,23 @@ header.hero {
   filter: brightness(1.08);
 }
 
-/* CTA + ripple */
+/* CTA + ripple (CTA ancho completo en móvil) */
 .hero-cta {
   display: flex;
   gap: 0.6rem;
   justify-content: center;
 }
+.hero-cta .btn {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 1.05rem;
+}
+@media (min-width: 768px) {
+  .hero-cta .btn {
+    width: auto;
+  }
+}
+
 .btn-brand {
   background: var(--brand);
   color: #fff;
@@ -642,7 +693,6 @@ article[data-step],
   border-color: var(--ring);
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px #2a375044 inset;
 }
-/* details/summary “ver más” */
 .tech-item summary {
   cursor: pointer;
   user-select: none;
@@ -790,8 +840,8 @@ article[data-step],
 /* ============================ WHATSAPP FAB =============================== */
 .wsp-fab {
   position: fixed;
-  right: 18px;
-  bottom: 18px;
+  right: clamp(10px, 2.5vw, 22px);
+  bottom: calc(clamp(10px, 2.5vw, 22px) + env(safe-area-inset-bottom, 0px));
   z-index: 1200;
   width: 56px;
   height: 56px;
@@ -836,7 +886,6 @@ footer {
 }
 
 /* ============================ COMPONENTES PRO ============================ */
-/* Chips (útiles para etiquetas de módulos, integraciones, etc.) */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -854,7 +903,6 @@ footer {
   color: #9fb4ff;
 }
 
-/* Callouts (info/tips/avisos) */
 .callout {
   border-radius: var(--r-3);
   border: 1px solid #ffffff14;
@@ -875,7 +923,6 @@ footer {
   box-shadow: 0 10px 28px rgba(52, 152, 219, 0.15);
 }
 
-/* Divisor suave */
 .divider {
   height: 1px;
   width: 100%;
@@ -883,7 +930,7 @@ footer {
   margin: var(--space-7) 0;
 }
 
-/* Skeletons (carga percibida, sin JS) */
+/* Skeletons */
 .skeleton {
   position: relative;
   overflow: hidden;
@@ -923,6 +970,23 @@ footer {
   }
 }
 
+/* ========================== AJUSTES DE BREAKPOINTS ======================= */
+/* Móvil chico (iPhone 7/8/SE) — bajamos tamaño del nombre */
+@media (max-width: 375px) {
+  .name-bling {
+    font-size: 1.85rem;
+  }
+  .hero-cta .btn {
+    width: 100%;
+  }
+}
+/* Móvil muy chico (SE 1ra gen) */
+@media (max-width: 320px) {
+  .name-bling {
+    font-size: 1.6rem;
+  }
+}
+
 /* ================================= PRINT ================================ */
 @media print {
   body {
@@ -946,11 +1010,7 @@ footer {
 }
 
 /* ============================= MODO CLARO (opt) ===========================
-   Para activarlo en algún momento, agregá en el <body>:
-   data-theme="light"
-   (No requiere JS; queda listo para usar.)<!-- test cambio -->
-
---------------------------------------------------------------------------- */
+   Para activarlo: <body data-theme="light"> */
 :root[data-theme="light"] {
   --bg: #f7f9fc;
   --bg2: #f2f5fa;
