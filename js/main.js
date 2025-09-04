@@ -13,17 +13,19 @@
 ================================================ */
 
 /* ------------------------ Entorno (DEV vs PROD) ------------------------- */
+// Soporta cualquier puerto de Live Server
 const isLiveServer =
-  location.host === "127.0.0.1:5500" || location.host === "localhost:5500"; // Live Server típico
+  location.hostname === "127.0.0.1" || location.hostname === "localhost";
 
 const isProd =
   location.hostname.endsWith("github.io") ||
   location.hostname.endsWith("tudominio.com"); // cambiá cuando tengas dominio
 
+// En prod, USA TU BACKEND REAL EN RENDER
 const API_BASE = isLiveServer
   ? "http://127.0.0.1:4000"
   : isProd
-  ? "https://TU-BACKEND.onrender.com" // <-- cambia acá UNA sola vez en prod
+  ? "https://alvaro-portfolio-backend.onrender.com" // <— fijo y correcto
   : "http://127.0.0.1:4000";
 
 console.log("main.js ✅ | API_BASE:", API_BASE);
@@ -51,7 +53,7 @@ window.addEventListener("load", () => {
   const pre = document.getElementById("pre");
   if (!pre) return;
 
-  // ⏱ Mantener splash visible al menos 10 segundos
+  // ⏱ Mantener splash visible al menos 10 segundos (bajá este valor si molesta en dev)
   const MIN_TIME = 10000;
 
   setTimeout(() => {
@@ -242,6 +244,7 @@ $$(".btn-ripple").forEach((btn) => {
     }
 
     try {
+      // 👇 AQUÍ FALTABAN BACKTICKS (corregido)
       const resp = await fetch(`${API_BASE}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -285,6 +288,7 @@ $$(".btn-ripple").forEach((btn) => {
     const r = card.getBoundingClientRect();
     const x = ((e.clientX - r.left) / r.width - 0.5) * 10;
     const y = ((e.clientY - r.top) / r.height - 0.5) * -10;
+    // 👇 AQUÍ FALTABAN BACKTICKS (corregido)
     card.style.transform = `perspective(800px) rotateX(${y}deg) rotateY(${x}deg)`;
   };
 
